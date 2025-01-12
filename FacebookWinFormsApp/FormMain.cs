@@ -480,28 +480,28 @@ namespace BasicFacebookFeatures
 
         private void checkedListBoxFood_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            checkedListBox_ItemCheck(checkedListBoxFood, EWishlistCategories.Food);
+            checkedListBox_ItemCheck(checkedListBoxFood,pictureBoxFood, EWishlistCategories.Food);
         }
 
         private void checkedListBoxShopping_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            checkedListBox_ItemCheck(checkedListBoxShopping, EWishlistCategories.Shopping);
+            checkedListBox_ItemCheck(checkedListBoxShopping, pictureBoxShopping, EWishlistCategories.Shopping);
         }
 
         private void checkedListBoxActivities_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            checkedListBox_ItemCheck(checkedListBoxActivities, EWishlistCategories.Activities);
+            checkedListBox_ItemCheck(checkedListBoxActivities,pictureBoxActivities, EWishlistCategories.Activities);
         }
 
         private void checkedListBoxPets_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            checkedListBox_ItemCheck(checkedListBoxPets, EWishlistCategories.Pets);
+            checkedListBox_ItemCheck(checkedListBoxPets,pictureBoxPets, EWishlistCategories.Pets);
         }
 
-        private void checkedListBox_ItemCheck(CheckedListBox i_List, EWishlistCategories i_Category)
+        private void checkedListBox_ItemCheck(CheckedListBox i_List, PictureBox i_PictureBox, EWishlistCategories i_Category)
         {
             string itemName = i_List.Text;
-            WishListItem wishListItemChecked = findWishListItemByName(i_Category, itemName);
+            WishListItem wishListItemChecked = findWishListItemByName(i_Category,i_PictureBox, itemName);
 
             if (wishListItemChecked != null)
             {
@@ -565,7 +565,7 @@ namespace BasicFacebookFeatures
 
         private void checkedListBoxActivities_SelectedIndexChanged(object sender, EventArgs e)
         {
-            WishListItem wishListItemOfSelectedItem = findWishListItemByName(EWishlistCategories.Activities, checkedListBoxActivities.Text);
+            WishListItem wishListItemOfSelectedItem = findWishListItemByName(EWishlistCategories.Activities,pictureBoxActivities, checkedListBoxActivities.Text);
 
             r_WishlistManager.LoadImageForPictureBoxInList(wishListItemOfSelectedItem, pictureBoxActivities);
             buttonDeleteItem.Enabled = true;
@@ -573,27 +573,14 @@ namespace BasicFacebookFeatures
 
         private void buttonDeleteItem_Click(object sender, EventArgs e)
         {
-            try
-            {
-                deleteSelectedItem(checkedListBoxFood, EWishlistCategories.Food);
-                deleteSelectedItem(checkedListBoxActivities, EWishlistCategories.Activities);
-                deleteSelectedItem(checkedListBoxPets, EWishlistCategories.Pets);
-                deleteSelectedItem(checkedListBoxShopping, EWishlistCategories.Shopping);
-                MessageBox.Show("Item deleted successfully.");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+            bool deleteFood = deleteSelectedItem(checkedListBoxFood, pictureBoxFood, EWishlistCategories.Food);
+            bool deleteActivities = deleteSelectedItem(checkedListBoxActivities, pictureBoxActivities, EWishlistCategories.Activities);
+            bool deletePets = deleteSelectedItem(checkedListBoxPets, pictureBoxPets, EWishlistCategories.Pets);
+            bool deleteShopping = deleteSelectedItem(checkedListBoxShopping, pictureBoxShopping, EWishlistCategories.Shopping);
 
-        private void deleteSelectedItem(CheckedListBox i_CheckedListBox, EWishlistCategories i_Category)
-        {
-            if (i_CheckedListBox.SelectedIndex >= 0)
+            if (deleteFood || deletePets || deleteShopping || deleteActivities)
             {
-                WishListItem selectedItem = (WishListItem)i_CheckedListBox.Items[i_CheckedListBox.SelectedIndex];
-                i_CheckedListBox.Items.RemoveAt(i_CheckedListBox.SelectedIndex);
-                r_WishlistManager.RemoveWish(i_Category.ToString(), selectedItem);
+                MessageBox.Show("Item deleted successfully.");
             }
             else
             {
@@ -601,10 +588,26 @@ namespace BasicFacebookFeatures
             }
         }
 
-
-        private WishListItem findWishListItemByName(EWishlistCategories i_Category, string i_ItemName)
+        private bool deleteSelectedItem(CheckedListBox i_CheckedListBox, PictureBox i_PictureBox, EWishlistCategories i_Category)
         {
-            return r_WishlistManager.FindAndHighlightItem(i_Category.ToString(), i_ItemName, pictureBoxFood, buttonDeleteItem);
+            bool deleted = false;
+
+            if (i_CheckedListBox.SelectedIndex >= 0)
+            {
+                WishListItem selectedItem = (WishListItem)i_CheckedListBox.Items[i_CheckedListBox.SelectedIndex];
+                i_CheckedListBox.Items.RemoveAt(i_CheckedListBox.SelectedIndex);
+                i_PictureBox.Image = null;
+                r_WishlistManager.RemoveWish(i_Category.ToString(), selectedItem);
+                deleted = true;
+            }
+
+            return deleted;
+        }
+
+
+        private WishListItem findWishListItemByName(EWishlistCategories i_Category, PictureBox i_PictureBox, string i_ItemName)
+        {
+            return r_WishlistManager.FindAndHighlightItem(i_Category.ToString(), i_ItemName, i_PictureBox, buttonDeleteItem);
         }
 
 

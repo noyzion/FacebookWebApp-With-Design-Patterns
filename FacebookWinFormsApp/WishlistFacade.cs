@@ -73,9 +73,10 @@ namespace BasicFacebookFeatures
             wishlistSummary.AppendLine($"Activities: {GetCheckedItems(activitiesListBox)}");
             wishlistSummary.AppendLine($"Pets: {GetCheckedItems(petsListBox)}");
             wishlistSummary.AppendLine($"Shopping: {GetCheckedItems(shoppingListBox)}");
-
+            r_WishlistUIManager.DisplayCombinedWishlistPopup(foodListBox,activitiesListBox, petsListBox, shoppingListBox);
             return wishlistSummary.ToString();
         }
+
 
         private string GetCheckedItems(CheckedListBox listBox)
         {
