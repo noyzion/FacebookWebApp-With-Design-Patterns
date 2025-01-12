@@ -10,6 +10,8 @@ namespace BasicFacebookFeatures
         public bool RememberUser { get; set; }
         public string LastAccessToken { get; set; }
         public WishlistManager WishlistManager { get; set; }
+        public WishlistFacade WishlistFacade { get; set; }
+
         public WorkoutManager WorkoutManager { get; set; }
         public AppSettings()
         {
@@ -17,6 +19,7 @@ namespace BasicFacebookFeatures
             LastAccessToken = null;
             Permissions = null;
             AppID = null;
+            WishlistFacade = null;
             WishlistManager = null;
             WorkoutManager = null;
         }
