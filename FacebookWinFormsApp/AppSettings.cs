@@ -13,6 +13,7 @@ namespace BasicFacebookFeatures
         public WishlistFacade WishlistFacade { get; set; }
 
         public WorkoutManager WorkoutManager { get; set; }
+        public WorkoutFacade WorkoutFacade { get; set; }
         public AppSettings()
         {
             RememberUser = false;
@@ -22,6 +23,7 @@ namespace BasicFacebookFeatures
             WishlistFacade = null;
             WishlistManager = null;
             WorkoutManager = null;
+            WorkoutFacade = null;
         }
         public void SaveToFile(string i_FilePath)
         {

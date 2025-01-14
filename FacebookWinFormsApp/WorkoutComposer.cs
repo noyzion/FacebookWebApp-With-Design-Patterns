@@ -12,7 +12,7 @@ namespace BasicFacebookFeatures
 
         public WorkoutComposer()
         {
-            WorkoutBuilder r_Builder = new WorkoutBuilder();
+             r_Builder = new WorkoutBuilder();
         }
         public Workout ComposeWorkout(decimal duration, string category, DateTime date, decimal calories)
         {

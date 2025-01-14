@@ -54,6 +54,11 @@ namespace BasicFacebookFeatures
                 WorkoutComposer composer = new WorkoutComposer();
                 Workout workout = composer.ComposeWorkout(duration, category, date, calories);
 
+                if (r_WorkoutManager.Workouts == null)
+                {
+                    r_WorkoutManager.Workouts = new List<Workout>();
+                }
+
                 r_WorkoutManager.Workouts.Add(workout);
                 r_WorkoutManager.FetchWorkoutData(r_WorkoutTable);
 

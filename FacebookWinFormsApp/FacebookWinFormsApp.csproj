@@ -106,13 +106,13 @@
     <Compile Include="IWishlistManager.cs" />
     <Compile Include="CategoryListWrapper.cs" />
     <Compile Include="IWorkoutBuilder.cs" />
-    <Compile Include="PrototypeWishlistItem.cs" />
     <Compile Include="WishlistFacade.cs" />
     <Compile Include="WishListItem.cs" />
     <Compile Include="WishListItemFactory.cs" />
     <Compile Include="WishlistManagerUI.cs" />
     <Compile Include="WorkoutBuilder.cs" />
     <Compile Include="WorkoutComposer.cs" />
+    <Compile Include="WorkoutFacade.cs" />
     <Compile Include="WorkoutManager.cs" />
     <Compile Include="EWishlistCategories.cs" />
     <Compile Include="FormAppSettings.cs">

@@ -9,23 +9,23 @@ namespace BasicFacebookFeatures
 {
     public class WishlistFacade
     {
-       public WishlistManager r_WishlistManager { get; set; }
+       public WishlistManager WishlistManager { get; set; }
         private readonly WishlistUIManager r_WishlistUIManager;
 
         public WishlistFacade()
         {
-            r_WishlistManager = new WishlistManager();
+            WishlistManager = new WishlistManager();
             r_WishlistUIManager = new WishlistUIManager();
         }
 
         public void AddWish(string category, string itemName, string photoUrl)
         {
-            r_WishlistManager.AddWishToWishlistValues(category, itemName, photoUrl);
+            WishlistManager.AddWishToWishlistValues(category, itemName, photoUrl);
         }
 
         public void RemoveWish(string category, WishListItem itemToRemove)
         {
-            r_WishlistManager.RemoveWishFromWishlistValues(category, itemToRemove);
+            WishlistManager.RemoveWishFromWishlistValues(category, itemToRemove);
         }
 
         public void UpdateUI(CheckedListBox foodListBox, CheckedListBox petsListBox,
@@ -42,7 +42,7 @@ namespace BasicFacebookFeatures
         }
         public WishListItem FindWishListItemByName(string category, string itemName)
         {
-            return r_WishlistManager.GetItemsByCategory(category).FirstOrDefault(item => item.Text == itemName);
+            return WishlistManager.GetItemsByCategory(category).FirstOrDefault(item => item.Text == itemName);
         }
 
         public void LoadImageForPictureBoxInList(WishListItem wishListItem, PictureBox pictureBox)
@@ -84,13 +84,13 @@ namespace BasicFacebookFeatures
         }
         public WishListItem FindAndHighlightItem(string category, string itemName, PictureBox pictureBox, Button deleteButton)
         {
-            WishListItem item = r_WishlistManager.FindWishListItemByName(category, itemName);
+            WishListItem item = WishlistManager.FindWishListItemByName(category, itemName);
             r_WishlistUIManager.HighlightItemInList(item, pictureBox, deleteButton);
             return item;
         }
         public List<WishListItem> GetItemsByCategory(string category)
         {
-            return r_WishlistManager.GetItemsByCategory(category);
+            return WishlistManager.GetItemsByCategory(category);
         }
 
     }
