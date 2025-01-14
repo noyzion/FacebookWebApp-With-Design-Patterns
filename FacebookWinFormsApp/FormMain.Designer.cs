@@ -87,6 +87,7 @@ namespace BasicFacebookFeatures
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.labelWishlistHeader = new System.Windows.Forms.Label();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
+            this.buttonShareWorkout = new System.Windows.Forms.Button();
             this.tabControlMainForm.SuspendLayout();
             this.tabFeed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxProfile)).BeginInit();
@@ -518,6 +519,7 @@ namespace BasicFacebookFeatures
             // panelWorkoutFeature
             // 
             this.panelWorkoutFeature.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelWorkoutFeature.Controls.Add(this.buttonShareWorkout);
             this.panelWorkoutFeature.Controls.Add(this.buttonStatistics);
             this.panelWorkoutFeature.Controls.Add(this.panelWorkouts);
             this.panelWorkoutFeature.Controls.Add(this.buttonAddWorkout);
@@ -533,7 +535,7 @@ namespace BasicFacebookFeatures
             this.buttonStatistics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonStatistics.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStatistics.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonStatistics.Location = new System.Drawing.Point(511, 83);
+            this.buttonStatistics.Location = new System.Drawing.Point(511, 51);
             this.buttonStatistics.Name = "buttonStatistics";
             this.buttonStatistics.Size = new System.Drawing.Size(88, 29);
             this.buttonStatistics.TabIndex = 89;
@@ -557,7 +559,7 @@ namespace BasicFacebookFeatures
             this.buttonAddWorkout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonAddWorkout.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonAddWorkout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonAddWorkout.Location = new System.Drawing.Point(497, 39);
+            this.buttonAddWorkout.Location = new System.Drawing.Point(497, 7);
             this.buttonAddWorkout.Name = "buttonAddWorkout";
             this.buttonAddWorkout.Size = new System.Drawing.Size(116, 35);
             this.buttonAddWorkout.TabIndex = 87;
@@ -800,7 +802,6 @@ namespace BasicFacebookFeatures
             // 
             // comboBoxCategory
             // 
-            
             this.comboBoxCategory.FormattingEnabled = true;
             this.comboBoxCategory.Items.AddRange(new object[] {
             BasicFacebookFeatures.EWishlistCategories.Food,
@@ -833,6 +834,22 @@ namespace BasicFacebookFeatures
             this.labelWishlistHeader.Size = new System.Drawing.Size(185, 43);
             this.labelWishlistHeader.TabIndex = 0;
             this.labelWishlistHeader.Text = "My Wishlist";
+            // 
+            // buttonShareWorkout
+            // 
+            this.buttonShareWorkout.BackColor = System.Drawing.Color.RoyalBlue;
+            this.buttonShareWorkout.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.buttonShareWorkout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonShareWorkout.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonShareWorkout.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.buttonShareWorkout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonShareWorkout.Location = new System.Drawing.Point(511, 108);
+            this.buttonShareWorkout.Name = "buttonShareWorkout";
+            this.buttonShareWorkout.Size = new System.Drawing.Size(88, 29);
+            this.buttonShareWorkout.TabIndex = 90;
+            this.buttonShareWorkout.Text = "share\r\n";
+            this.buttonShareWorkout.UseVisualStyleBackColor = false;
+            this.buttonShareWorkout.Click += new System.EventHandler(this.shareWorkoutButton_Click);
             // 
             // FormMain
             // 
@@ -927,6 +944,7 @@ namespace BasicFacebookFeatures
         private System.Windows.Forms.Label labelBirthday;
         private System.Windows.Forms.Button buttonStatistics;
         private System.Windows.Forms.Panel panelWorkouts;
+        private System.Windows.Forms.Button buttonShareWorkout;
     }
 }
 

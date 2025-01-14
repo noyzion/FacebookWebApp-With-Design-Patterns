@@ -309,7 +309,7 @@
     <value>57, 149</value>
   </data>
   <data name="labelChooseDate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>224, 25</value>
+    <value>179, 20</value>
   </data>
   <data name="labelChooseDate.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>

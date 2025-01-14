@@ -143,6 +143,7 @@
     </Compile>
     <Compile Include="WishlistManager.cs" />
     <Compile Include="Workout.cs" />
+    <Compile Include="WorkoutManagerUI.cs" />
     <EmbeddedResource Include="StatisicsForm.resx">
       <DependentUpon>StatisicsForm.cs</DependentUpon>
     </EmbeddedResource>

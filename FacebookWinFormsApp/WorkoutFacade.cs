@@ -8,12 +8,15 @@ namespace BasicFacebookFeatures
     {
         public  WorkoutManager WorkoutManager { get; set; }
         private readonly DataGridView r_WorkoutTable;
+        private readonly WorkoutManagerUI r_WorkoutManagerUI;
 
         public WorkoutFacade()
         {
             WorkoutManager = new WorkoutManager();
+            r_WorkoutManagerUI = new WorkoutManagerUI();
             r_WorkoutTable = WorkoutManager.InitializeWorkoutTable();
         }
+
 
         public DataGridView GetWorkoutTable()
         {
@@ -52,5 +55,11 @@ namespace BasicFacebookFeatures
         {
             return WorkoutManager.Workouts;
         }
+        public string PreparePostWorkouts()
+        {
+            r_WorkoutManagerUI.DisplayWorkoutsPopup(WorkoutManager.Workouts);
+            return WorkoutManager.GenerateWorkoutsSummary();
+        }
+
     }
 }

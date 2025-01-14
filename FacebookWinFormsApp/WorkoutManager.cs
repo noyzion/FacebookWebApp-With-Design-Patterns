@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace BasicFacebookFeatures
 {
@@ -25,7 +26,7 @@ namespace BasicFacebookFeatures
         }
         public void FetchWorkoutData(DataGridView i_WorkoutTable)
         {
-            i_WorkoutTable.Rows.Clear(); 
+            i_WorkoutTable.Rows.Clear();
             if (Workouts != null)
             {
                 foreach (Workout workout in Workouts)
@@ -38,6 +39,23 @@ namespace BasicFacebookFeatures
                     );
                 }
             }
+        }
+        public string GenerateWorkoutsSummary()
+        {
+            if (Workouts == null || Workouts.Count == 0)
+            {
+                return "No workouts available to share.";
+            }
+
+            StringBuilder summaryBuilder = new StringBuilder();
+            summaryBuilder.AppendLine("My Recent Workouts:");
+            foreach (Workout workout in Workouts)
+            {
+                summaryBuilder.AppendLine($"- {workout.Category}: {workout.Duration} mins, " +
+                                          $"{workout.Calories} cal on {workout.Date:yyyy-MM-dd}");
+            }
+
+            return summaryBuilder.ToString();
         }
     }
 }

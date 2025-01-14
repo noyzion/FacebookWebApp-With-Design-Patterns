@@ -12,7 +12,7 @@ namespace BasicFacebookFeatures
         private const string k_User = "C:/Users/noyzi/Downloads/UserDana.xml";
         private const int k_CollectionLimit = 70;  // If the limit is bigger, it works but very slow
         private readonly AppSettings r_AppSettings;
-        private  WishlistFacade WishlistFacade;
+        private WishlistFacade WishlistFacade;
         private FacebookWrapper.LoginResult m_LoginResult;
         private FormAppSettings m_FormAppSettings = null;
         private bool m_IsTextBoxChanged = false;
@@ -29,9 +29,9 @@ namespace BasicFacebookFeatures
             this.rememberMeCheckBox.Checked = r_AppSettings.RememberUser;
             FacebookWrapper.FacebookService.s_CollectionLimit = k_CollectionLimit;
 
-            if(r_AppSettings.WishlistFacade == null)
+            if (r_AppSettings.WishlistFacade == null)
             {
-               r_AppSettings.WishlistFacade = new WishlistFacade();
+                r_AppSettings.WishlistFacade = new WishlistFacade();
                 r_AppSettings.WishlistManager = r_AppSettings.WishlistFacade.WishlistManager;
             }
             if (r_AppSettings.WorkoutFacade == null)
@@ -110,7 +110,7 @@ namespace BasicFacebookFeatures
             {
                 Login();
                 m_FacebookFacade = new FacebookFacade(m_LoginResult);
-                WorkoutFacade  = new WorkoutFacade();
+                WorkoutFacade = new WorkoutFacade();
                 WishlistFacade = new WishlistFacade();
             }
         }
@@ -141,7 +141,7 @@ namespace BasicFacebookFeatures
             FacebookService.LogoutWithUI();
             m_LoginResult = null;
             r_AppSettings.WishlistFacade = null;
-            r_AppSettings.WorkoutFacade =  null;    
+            r_AppSettings.WorkoutFacade = null;
             logoutUIChanges();
         }
 
@@ -487,7 +487,7 @@ namespace BasicFacebookFeatures
 
         private void checkedListBoxFood_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            checkedListBox_ItemCheck(checkedListBoxFood,pictureBoxFood, EWishlistCategories.Food);
+            checkedListBox_ItemCheck(checkedListBoxFood, pictureBoxFood, EWishlistCategories.Food);
         }
 
         private void checkedListBoxShopping_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -497,18 +497,18 @@ namespace BasicFacebookFeatures
 
         private void checkedListBoxActivities_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            checkedListBox_ItemCheck(checkedListBoxActivities,pictureBoxActivities, EWishlistCategories.Activities);
+            checkedListBox_ItemCheck(checkedListBoxActivities, pictureBoxActivities, EWishlistCategories.Activities);
         }
 
         private void checkedListBoxPets_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            checkedListBox_ItemCheck(checkedListBoxPets,pictureBoxPets, EWishlistCategories.Pets);
+            checkedListBox_ItemCheck(checkedListBoxPets, pictureBoxPets, EWishlistCategories.Pets);
         }
 
         private void checkedListBox_ItemCheck(CheckedListBox i_List, PictureBox i_PictureBox, EWishlistCategories i_Category)
         {
             string itemName = i_List.Text;
-            WishListItem wishListItemChecked = findWishListItemByName(i_Category,i_PictureBox, itemName);
+            WishListItem wishListItemChecked = findWishListItemByName(i_Category, i_PictureBox, itemName);
 
             if (wishListItemChecked != null)
             {
@@ -530,7 +530,7 @@ namespace BasicFacebookFeatures
 
             if (wishListItemOfSelectedItem != null)
             {
-               WishlistFacade.LoadImageForPictureBoxInList(wishListItemOfSelectedItem, pictureBoxFood);
+                WishlistFacade.LoadImageForPictureBoxInList(wishListItemOfSelectedItem, pictureBoxFood);
                 buttonDeleteItem.Enabled = true;
             }
         }
@@ -572,7 +572,7 @@ namespace BasicFacebookFeatures
 
         private void checkedListBoxActivities_SelectedIndexChanged(object sender, EventArgs e)
         {
-            WishListItem wishListItemOfSelectedItem = findWishListItemByName(EWishlistCategories.Activities,pictureBoxActivities, checkedListBoxActivities.Text);
+            WishListItem wishListItemOfSelectedItem = findWishListItemByName(EWishlistCategories.Activities, pictureBoxActivities, checkedListBoxActivities.Text);
 
             WishlistFacade.LoadImageForPictureBoxInList(wishListItemOfSelectedItem, pictureBoxActivities);
             buttonDeleteItem.Enabled = true;
@@ -629,20 +629,35 @@ namespace BasicFacebookFeatures
             WorkoutFacade.FetchWorkoutData();
         }
 
-        private void buttonRemoveWorkout_Click(object sender, EventArgs e)
-        {
-            if (WorkoutFacade.GetWorkouts() != null && WorkoutFacade.GetWorkouts().Count > 0)
-            {
-                WorkoutFacade.RemoveWorkout(WorkoutFacade.GetWorkouts()[0]);
-            }
-        }
-    
 
-    private void buttonStatistics_Click(object sender, EventArgs e)
+        private void buttonStatistics_Click(object sender, EventArgs e)
         {
             StatisicsForm statisicsForm = new StatisicsForm(WorkoutFacade.GetWorkoutTable());
 
             statisicsForm.ShowDialog();
+        }
+
+        private void shareWorkoutButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string workoutsSummary = WorkoutFacade.PreparePostWorkouts();
+
+                if (string.IsNullOrEmpty(workoutsSummary) || workoutsSummary == "No workouts available to share.")
+                {
+                    MessageBox.Show(workoutsSummary, "Workout Summary", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Post the workout summary to Facebook
+                m_FacebookFacade.PostStatus(workoutsSummary, textBoxStatus);
+
+                MessageBox.Show("Workouts shared successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while sharing workouts: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
