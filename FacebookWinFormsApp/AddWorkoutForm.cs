@@ -66,6 +66,7 @@ namespace BasicFacebookFeatures
                 //postWorkoutToFacebook(workout);
 
                 MessageBox.Show("Workout saved successfully!");
+                this.Close();
             }
             catch (Exception ex)
             {
