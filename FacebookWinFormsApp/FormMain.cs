@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using FacebookWrapper;
 using FacebookWrapper.ObjectModel;
@@ -9,6 +10,7 @@ namespace BasicFacebookFeatures
 {
     public partial class FormMain : Form
     {
+        private readonly object loginLock = new object();
         private const string k_User = "C:/Users/noyzi/Downloads/UserDana.xml";
         private const int k_CollectionLimit = 70;  // If the limit is bigger, it works but very slow
         private readonly AppSettings r_AppSettings;
@@ -46,7 +48,6 @@ namespace BasicFacebookFeatures
             WorkoutFacade.WorkoutManager = WorkoutFacade.WorkoutManager;
             panelWorkouts.Controls.Add(WorkoutFacade.GetWorkoutTable());
         }
-
         private void pictureBox_MouseEnter(object sender, EventArgs e)
         {
             PictureBox pictureBox = sender as PictureBox;
@@ -59,7 +60,6 @@ namespace BasicFacebookFeatures
                 pictureBox.BackColor = System.Drawing.Color.LightGray;
             }
         }
-
         private void pictureBox_MouseLeave(object sender, EventArgs e)
         {
             PictureBox pictureBox = sender as PictureBox;
@@ -72,7 +72,6 @@ namespace BasicFacebookFeatures
                 pictureBox.BackColor = System.Drawing.Color.Transparent;
             }
         }
-
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
@@ -92,7 +91,6 @@ namespace BasicFacebookFeatures
 
             r_AppSettings.SaveToFile(k_User);
         }
-
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
@@ -100,21 +98,21 @@ namespace BasicFacebookFeatures
             {
                 m_LoginResult = FacebookService.Connect(r_AppSettings.LastAccessToken);
                 m_FacebookFacade = new FacebookFacade(m_LoginResult);
-                populateUIFromFacebookData();
+                PopulateUIFromFacebookData();
             }
         }
-
         private void buttonLogin_Click(object sender, EventArgs e)
         {
             if (m_LoginResult == null || string.IsNullOrEmpty(m_LoginResult.AccessToken))
             {
-                Login();
-                m_FacebookFacade = new FacebookFacade(m_LoginResult);
-                WorkoutFacade = new WorkoutFacade();
-                WishlistFacade = new WishlistFacade();
+                // Disable the login button to prevent multiple clicks
+                buttonLogin.Enabled = false;
+
+                // Start a new thread for the login process
+                Thread loginThread = new Thread(Login);
+                loginThread.Start();
             }
         }
-
         private void buttonsAfterLogin()
         {
             buttonLogin.Enabled = false;
@@ -135,7 +133,6 @@ namespace BasicFacebookFeatures
             buttonAddVideo.Enabled = true;
             buttonSettings.Enabled = true;
         }
-
         private void buttonLogout_Click(object sender, EventArgs e)
         {
             FacebookService.LogoutWithUI();
@@ -144,7 +141,6 @@ namespace BasicFacebookFeatures
             r_AppSettings.WorkoutFacade = null;
             logoutUIChanges();
         }
-
         private void logoutUIChanges()
         {
             buttonLogin.Text = "Login";
@@ -159,55 +155,83 @@ namespace BasicFacebookFeatures
             WishlistFacade.ResetUI(checkedListBoxFood, checkedListBoxPets,
                                               checkedListBoxActivities, checkedListBoxShopping);
         }
-
         private void groups_Click(object sender, EventArgs e)
         {
             m_FacebookFacade.FetchGroups(dataListBox);
         }
-
         private void friends_Click(object sender, EventArgs e)
         {
             m_FacebookFacade.FetchFriends(dataListBox);
         }
-
         private void posts_Click(object sender, EventArgs e)
         {
-            m_FacebookFacade.FetchPosts(dataListBox);
+                        m_FacebookFacade.FetchPosts(dataListBox);
         }
-
         private void photos_Click(object sender, EventArgs e)
         {
             m_FacebookFacade.FetchAlbums(dataListBox);
         }
-
         private void pages_Click(object sender, EventArgs e)
         {
             m_FacebookFacade.FetchLikedPages(dataListBox);
         }
-
         private void events_Click(object sender, EventArgs e)
         {
             m_FacebookFacade.FetchEvents(dataListBox);
         }
-
         public void Login()
         {
-            m_LoginResult = FacebookService.Login(
-                            "914564353962957",
-                            "email",
-                            "public_profile",
-                            "user_posts",
-                            "user_photos",
-                            "user_events",
-                            "user_friends",
-                            "user_likes"
-                            );
-            if (!string.IsNullOrEmpty(m_LoginResult.AccessToken))
+            try
             {
-                populateUIFromFacebookData();
+                lock (loginLock)
+                {
+                    // Perform the login operation
+                    m_LoginResult = FacebookService.Login(
+                        "914564353962957",
+                        "email",
+                        "public_profile",
+                        "user_posts",
+                        "user_photos",
+                        "user_events",
+                        "user_friends",
+                        "user_likes"
+                    );
+
+                    if (!string.IsNullOrEmpty(m_LoginResult.AccessToken))
+                    {
+                        // Initialize FacebookFacade after successful login
+                        m_FacebookFacade = new FacebookFacade(m_LoginResult);
+                        WorkoutFacade = new WorkoutFacade();
+                        WishlistFacade = new WishlistFacade();
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(m_LoginResult.AccessToken))
+                {
+                    // Safely update the UI after login on the main thread
+                    this.Invoke((MethodInvoker)delegate {
+                        PopulateUIFromFacebookData();
+                        buttonsAfterLogin();
+                    });
+                }
+                else
+                {
+                    // If login failed, re-enable the login button
+                    this.Invoke((MethodInvoker)delegate {
+                        MessageBox.Show("Login failed. Please try again.", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        buttonLogin.Enabled = true;
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during login
+                this.Invoke((MethodInvoker)delegate {
+                    MessageBox.Show($"Login failed: {ex.Message}", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    buttonLogin.Enabled = true;
+                });
             }
         }
-
         private void dataListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (dataListBox.SelectedItems.Count == 1)
@@ -239,8 +263,7 @@ namespace BasicFacebookFeatures
                 }
             }
         }
-
-        public void populateUIFromFacebookData()
+        public void PopulateUIFromFacebookData()
         {
             this.Text = $"{m_LoginResult.LoggedInUser.Name} Facebook App";
             buttonLogin.Text = $"Logged in as {m_LoginResult.LoggedInUser.Name}";
@@ -251,19 +274,17 @@ namespace BasicFacebookFeatures
             for (int i = 0; i < Enum.GetValues(typeof(EWishlistCategories)).Length; i++)
             {
                 EWishlistCategories category = (EWishlistCategories)i;
+
                 populateCheckBoxListOfWishlist((EWishlistCategories)i);
             }
 
             buttonsAfterLogin();
             WorkoutFacade.WorkoutManager.FetchWorkoutData(WorkoutFacade.GetWorkoutTable());
-
         }
-
         private void addPostButton_Click(object sender, EventArgs e)
         {
             m_FacebookFacade.PostStatus(textBoxStatus.Text, textBoxStatus);
         }
-
         private void addPictureButton_Click(object sender, EventArgs e)
         {
             string photoPath = m_FacebookFacade.SelectPhotoFile();
@@ -276,12 +297,10 @@ namespace BasicFacebookFeatures
 
             m_FacebookFacade.PostPhoto(photoPath);
         }
-
         private void textBoxStatus_TextChanged(object sender, EventArgs e)
         {
             buttonAddPost.Enabled = !string.IsNullOrWhiteSpace(textBoxStatus.Text);
         }
-
         private void buttonVideo_Click(object sender, EventArgs e)
         {
             try
@@ -301,7 +320,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void pictureBoxProfile_Click(object sender, EventArgs e)
         {
             using (OpenProfilePicture optionsForm = new OpenProfilePicture())
@@ -321,7 +339,6 @@ namespace BasicFacebookFeatures
                 }
             }
         }
-
         private void ShowProfile()
         {
             try
@@ -337,7 +354,6 @@ namespace BasicFacebookFeatures
                 };
 
                 profilePictureBox.Load(profilePictureUrl);
-
                 Form profileForm = new Form
                 {
                     Text = "Profile Picture",
@@ -352,7 +368,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"Failed to load the profile picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void buttonSettings_Click(object sender, EventArgs e)
         {
             if (m_FormAppSettings == null)
@@ -375,7 +390,6 @@ namespace BasicFacebookFeatures
                 }
             }
         }
-
         private void checkItemInList(CheckedListBox i_CheckedListBox, WishListItem i_CheckedItem)
         {
             if (i_CheckedItem.Checked)
@@ -388,25 +402,21 @@ namespace BasicFacebookFeatures
                 }
             }
         }
-
         private void textBoxWishlistName_TextChanged(object sender, EventArgs e)
         {
             m_IsTextBoxChanged = !string.IsNullOrWhiteSpace(textBoxName.Text);
             updateAddButtonState();
         }
-
         private void comboBoxCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             m_IsComboBoxChanged = (comboBoxCategory.SelectedItem is EWishlistCategories selectedCategory);
             updateAddButtonState();
         }
-
         private void updateAddButtonState()
         {
             buttonAddPhoto.Enabled = m_IsComboBoxChanged && m_IsTextBoxChanged;
             buttonAdd.Enabled = m_IsTextBoxChanged && m_IsComboBoxChanged;
         }
-
         private void populateCheckBoxListOfWishlist(EWishlistCategories i_Category)
         {
             List<WishListItem> items = r_AppSettings.WishlistFacade.GetItemsByCategory(i_Category.ToString()) ?? new List<WishListItem>();
@@ -434,7 +444,6 @@ namespace BasicFacebookFeatures
                 }
             }
         }
-
         private void buttonAddWithPhoto_Click(object sender, EventArgs e)
         {
             try
@@ -475,8 +484,8 @@ namespace BasicFacebookFeatures
 
                 WishlistFacade.AddWish(category, itemName, null);
                 WishListItem newItem = new WishListItem { Text = itemName, PhotoUrl = null };
-                WishlistFacade.UpdateUI(checkedListBoxFood, checkedListBoxPets, checkedListBoxActivities, checkedListBoxShopping, category, newItem);
 
+                WishlistFacade.UpdateUI(checkedListBoxFood, checkedListBoxPets, checkedListBoxActivities, checkedListBoxShopping, category, newItem);
                 textBoxName.Clear();
             }
             catch (Exception ex)
@@ -484,27 +493,22 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void checkedListBoxFood_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             checkedListBox_ItemCheck(checkedListBoxFood, pictureBoxFood, EWishlistCategories.Food);
         }
-
         private void checkedListBoxShopping_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             checkedListBox_ItemCheck(checkedListBoxShopping, pictureBoxShopping, EWishlistCategories.Shopping);
         }
-
         private void checkedListBoxActivities_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             checkedListBox_ItemCheck(checkedListBoxActivities, pictureBoxActivities, EWishlistCategories.Activities);
         }
-
         private void checkedListBoxPets_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             checkedListBox_ItemCheck(checkedListBoxPets, pictureBoxPets, EWishlistCategories.Pets);
         }
-
         private void checkedListBox_ItemCheck(CheckedListBox i_List, PictureBox i_PictureBox, EWishlistCategories i_Category)
         {
             string itemName = i_List.Text;
@@ -522,8 +526,6 @@ namespace BasicFacebookFeatures
                 }
             }
         }
-
-
         private void checkedListBoxFood_SelectedIndexChanged(object sender, EventArgs e)
         {
             WishListItem wishListItemOfSelectedItem = WishlistFacade.FindWishListItemByName(EWishlistCategories.Food.ToString(), checkedListBoxFood.Text);
@@ -534,7 +536,6 @@ namespace BasicFacebookFeatures
                 buttonDeleteItem.Enabled = true;
             }
         }
-
         private void checkedListBoxShopping_SelectedIndexChanged(object sender, EventArgs e)
         {
             WishListItem wishListItemOfSelectedItem = WishlistFacade.FindWishListItemByName(EWishlistCategories.Shopping.ToString(), checkedListBoxShopping.Text);
@@ -545,7 +546,6 @@ namespace BasicFacebookFeatures
                 buttonDeleteItem.Enabled = true;
             }
         }
-
         private void checkedListBoxPets_SelectedIndexChanged(object sender, EventArgs e)
         {
             WishListItem wishListItemOfSelectedItem = WishlistFacade.FindWishListItemByName(EWishlistCategories.Pets.ToString(), checkedListBoxPets.Text);
@@ -556,12 +556,12 @@ namespace BasicFacebookFeatures
                 buttonDeleteItem.Enabled = true;
             }
         }
-
         private void buttonPostWishlist_Click(object sender, EventArgs e)
         {
             try
             {
                 string postData = WishlistFacade.ShareWishlist(checkedListBoxFood, checkedListBoxActivities, checkedListBoxPets, checkedListBoxShopping);
+
                 m_FacebookFacade.PostStatus(postData, textBoxStatus);
             }
             catch (Exception ex)
@@ -569,7 +569,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"An error occurred while posting the wishlist: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void checkedListBoxActivities_SelectedIndexChanged(object sender, EventArgs e)
         {
             WishListItem wishListItemOfSelectedItem = findWishListItemByName(EWishlistCategories.Activities, pictureBoxActivities, checkedListBoxActivities.Text);
@@ -577,7 +576,6 @@ namespace BasicFacebookFeatures
             WishlistFacade.LoadImageForPictureBoxInList(wishListItemOfSelectedItem, pictureBoxActivities);
             buttonDeleteItem.Enabled = true;
         }
-
         private void buttonDeleteItem_Click(object sender, EventArgs e)
         {
             bool deleteFood = deleteSelectedItem(checkedListBoxFood, pictureBoxFood, EWishlistCategories.Food);
@@ -594,7 +592,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show("Please select an item to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
         private bool deleteSelectedItem(CheckedListBox i_CheckedListBox, PictureBox i_PictureBox, EWishlistCategories i_Category)
         {
             bool deleted = false;
@@ -602,6 +599,7 @@ namespace BasicFacebookFeatures
             if (i_CheckedListBox.SelectedIndex >= 0)
             {
                 WishListItem selectedItem = (WishListItem)i_CheckedListBox.Items[i_CheckedListBox.SelectedIndex];
+
                 i_CheckedListBox.Items.RemoveAt(i_CheckedListBox.SelectedIndex);
                 i_PictureBox.Image = null;
                 WishlistFacade.RemoveWish(i_Category.ToString(), selectedItem);
@@ -610,33 +608,21 @@ namespace BasicFacebookFeatures
 
             return deleted;
         }
-
-
         private WishListItem findWishListItemByName(EWishlistCategories i_Category, PictureBox i_PictureBox, string i_ItemName)
         {
             return WishlistFacade.FindAndHighlightItem(i_Category.ToString(), i_ItemName, i_PictureBox, buttonDeleteItem);
         }
-
-
         private void buttonAddWorkout_Click(object sender, EventArgs e)
         {
             AddWorkoutForm addWorkoutForm = new AddWorkoutForm(WorkoutFacade.GetWorkoutTable(), WorkoutFacade.WorkoutManager);
             addWorkoutForm.ShowDialog();
         }
-
-        private void buttonFetchWorkouts_Click(object sender, EventArgs e)
-        {
-            WorkoutFacade.FetchWorkoutData();
-        }
-
-
         private void buttonStatistics_Click(object sender, EventArgs e)
         {
             StatisicsForm statisicsForm = new StatisicsForm(WorkoutFacade.GetWorkoutTable());
 
             statisicsForm.ShowDialog();
         }
-
         private void shareWorkoutButton_Click(object sender, EventArgs e)
         {
             try
@@ -649,9 +635,7 @@ namespace BasicFacebookFeatures
                     return;
                 }
 
-                // Post the workout summary to Facebook
                 m_FacebookFacade.PostStatus(workoutsSummary, textBoxStatus);
-
                 MessageBox.Show("Workouts shared successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

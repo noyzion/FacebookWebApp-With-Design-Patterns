@@ -1,6 +1,8 @@
-﻿using FacebookWrapper.ObjectModel;
+﻿using CefSharp.DevTools.IndexedDB;
+using FacebookWrapper.ObjectModel;
 using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace BasicFacebookFeatures
@@ -12,6 +14,7 @@ namespace BasicFacebookFeatures
         private const int k_AlbumFormWidth = 450;
         private const int k_AlbumFormHeight = 600;
         private const int k_PictureInAlbumSize = 200;
+        private readonly object fetchLock = new object();  // Lock object for thread synchronization
 
         public FacebookManagerUI(FacebookManager i_FacebookLogic)
         {
@@ -20,162 +23,242 @@ namespace BasicFacebookFeatures
 
         public void FetchGroups(ListBox i_DataListBox)
         {
-            try
+            Thread fetchGroupsThread = new Thread(() =>
             {
-                i_DataListBox.DataSource = null;
-                i_DataListBox.Items?.Clear();
-                i_DataListBox.DisplayMember = "Name";
-
-                FacebookObjectCollection<Group> groups = r_FacebookLogic.FetchGroups();
-
-                foreach (Group group in groups)
+                try
                 {
-                    i_DataListBox.Items.Add(group);
-                }
+                    lock (fetchLock)
+                    {
+                        var groups = r_FacebookLogic.FetchGroups();
 
-                if (i_DataListBox.Items.Count == 0)
-                {
-                    MessageBox.Show("No groups to retrieve :(");
+                        i_DataListBox.Invoke(new Action(() =>
+                        {
+                            i_DataListBox.DataSource = null;
+                            i_DataListBox.Items.Clear();
+                            i_DataListBox.DisplayMember = "Name";
+
+                            foreach (var group in groups)
+                            {
+                                i_DataListBox.Items.Add(group);
+                            }
+
+                            if (i_DataListBox.Items.Count == 0)
+                            {
+                                MessageBox.Show("No groups to retrieve :(");
+                            }
+                        }));
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching groups: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    i_DataListBox.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error fetching groups: {ex.Message}");
+                    }));
+                }
+            });
+            fetchGroupsThread.Start();
         }
 
         public void FetchAlbums(ListBox i_DataListBox)
         {
-            try
+            Thread fetchAlbumsThread = new Thread(() =>
             {
-                i_DataListBox.DataSource = null;
-                i_DataListBox.Items?.Clear();
-                i_DataListBox.DisplayMember = "Name";
-
-                FacebookObjectCollection<Album> albums = r_FacebookLogic.FetchAlbums();
-
-                foreach (Album album in albums)
+                try
                 {
-                    i_DataListBox.Items.Add(album);
-                }
+                    lock (fetchLock)
+                    {
+                        var albums = r_FacebookLogic.FetchAlbums();
 
-                if (i_DataListBox.Items.Count == 0)
-                {
-                    MessageBox.Show("No albums to retrieve :(");
+                        i_DataListBox.Invoke(new Action(() =>
+                        {
+                            i_DataListBox.DataSource = null;
+                            i_DataListBox.Items.Clear();
+                            i_DataListBox.DisplayMember = "Name";
+
+                            foreach (var album in albums)
+                            {
+                                i_DataListBox.Items.Add(album);
+                            }
+
+                            if (i_DataListBox.Items.Count == 0)
+                            {
+                                MessageBox.Show("No albums to retrieve :(");
+                            }
+                        }));
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching albums: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    i_DataListBox.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error fetching albums: {ex.Message}");
+                    }));
+                }
+            });
+            fetchAlbumsThread.Start();
         }
 
         public void FetchFriends(ListBox i_DataListBox)
         {
-            try
+            Thread fetchFriendsThread = new Thread(() =>
             {
-                i_DataListBox.DataSource = null;
-                i_DataListBox.Items?.Clear();
-                i_DataListBox.DisplayMember = "Name";
-
-                FacebookObjectCollection<User> friends = r_FacebookLogic.FetchFriends();
-
-                foreach (User friend in friends)
+                try
                 {
-                    i_DataListBox.Items.Add(friend);
-                }
+                    lock (fetchLock)
+                    {
+                        var friends = r_FacebookLogic.FetchFriends();
 
-                if (i_DataListBox.Items.Count == 0)
-                {
-                    MessageBox.Show("No friends to retrieve :(");
+                        i_DataListBox.Invoke(new Action(() =>
+                        {
+                            i_DataListBox.DataSource = null;
+                            i_DataListBox.Items.Clear();
+                            i_DataListBox.DisplayMember = "Name";
+
+                            foreach (var friend in friends)
+                            {
+                                i_DataListBox.Items.Add(friend);
+                            }
+
+                            if (i_DataListBox.Items.Count == 0)
+                            {
+                                MessageBox.Show("No friends to retrieve :(");
+                            }
+                        }));
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching friends: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    i_DataListBox.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error fetching friends: {ex.Message}");
+                    }));
+                }
+            });
+            fetchFriendsThread.Start();
         }
 
         public void FetchPosts(ListBox i_DataListBox)
         {
-            try
+            Thread fetchPostsThread = new Thread(() =>
             {
-                i_DataListBox.DataSource = null;
-                i_DataListBox.Items?.Clear();
-                i_DataListBox.DisplayMember = "UpdateTime";
-
-                FacebookObjectCollection<Post> posts = r_FacebookLogic.FetchPosts();
-
-                foreach (Post post in posts)
+                try
                 {
-                    if (post.Message != null || post.PictureURL != null)
+                    lock (fetchLock)
                     {
-                        i_DataListBox.Items.Add(post);
+                        var posts = r_FacebookLogic.FetchPosts();
+
+                        i_DataListBox.Invoke(new Action(() =>
+                        {
+                            i_DataListBox.DataSource = null;
+                            i_DataListBox.Items.Clear();
+                            i_DataListBox.DisplayMember = "UpdateTime";
+
+                            foreach (var post in posts)
+                            {
+                                if (post.Message != null || post.PictureURL != null)
+                                {
+                                    i_DataListBox.Items.Add(post);
+                                }
+                            }
+
+                            if (i_DataListBox.Items.Count == 0)
+                            {
+                                MessageBox.Show("No posts to retrieve :(");
+                            }
+                        }));
                     }
                 }
-
-                if (i_DataListBox.Items.Count == 0)
+                catch (Exception ex)
                 {
-                    MessageBox.Show("No posts to retrieve :(");
+                    i_DataListBox.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error fetching posts: {ex.Message}");
+                    }));
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching posts: {ex.Message}");
-            }
+            });
+            fetchPostsThread.Start();
         }
-
         public void FetchLikedPages(ListBox i_DataListBox)
         {
-            try
+            Thread fetchLikedPagesThread = new Thread(() =>
             {
-                i_DataListBox.DataSource = null;
-                i_DataListBox.Items?.Clear();
-                i_DataListBox.DisplayMember = "Name";
-
-                FacebookObjectCollection<Page> likedPages = r_FacebookLogic.FetchLikedPages();
-
-                foreach (Page page in likedPages)
+                try
                 {
-                    i_DataListBox.Items.Add(page);
-                }
+                    // Locking to ensure thread safety
+                    lock (fetchLock)
+                    {
+                        var likedPages = r_FacebookLogic.FetchLikedPages();
 
-                if (i_DataListBox.Items.Count == 0)
-                {
-                    MessageBox.Show("No liked pages to retrieve :(");
+                        i_DataListBox.Invoke(new Action(() =>
+                        {
+                            i_DataListBox.DataSource = null;
+                            i_DataListBox.Items.Clear();
+                            i_DataListBox.DisplayMember = "Name";
+
+                            foreach (var page in likedPages)
+                            {
+                                i_DataListBox.Items.Add(page);
+                            }
+
+                            if (i_DataListBox.Items.Count == 0)
+                            {
+                                MessageBox.Show("No liked pages to retrieve :(");
+                            }
+                        }));
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching liked pages: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    i_DataListBox.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error fetching liked pages: {ex.Message}");
+                    }));
+                }
+            });
+            fetchLikedPagesThread.Start();
         }
 
         public void FetchEvents(ListBox i_DataListBox)
         {
-            try
+            Thread fetchEventsThread = new Thread(() =>
             {
-                i_DataListBox.DataSource = null;
-                i_DataListBox.Items?.Clear();
-                i_DataListBox.DisplayMember = "Name";
-
-                FacebookObjectCollection<Event> events = r_FacebookLogic.FetchEvents();
-
-                foreach (Event fbEvent in events)
+                try
                 {
-                    i_DataListBox.Items.Add(fbEvent);
-                }
+                    // Locking to ensure thread safety
+                    lock (fetchLock)
+                    {
+                        var events = r_FacebookLogic.FetchEvents();
 
-                if (i_DataListBox.Items.Count == 0)
-                {
-                    MessageBox.Show("No events to retrieve :(");
+                        i_DataListBox.Invoke(new Action(() =>
+                        {
+                            i_DataListBox.DataSource = null;
+                            i_DataListBox.Items.Clear();
+                            i_DataListBox.DisplayMember = "Name";
+
+                            foreach (var fbEvent in events)
+                            {
+                                i_DataListBox.Items.Add(fbEvent);
+                            }
+
+                            if (i_DataListBox.Items.Count == 0)
+                            {
+                                MessageBox.Show("No events to retrieve :(");
+                            }
+                        }));
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching events: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    i_DataListBox.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error fetching events: {ex.Message}");
+                    }));
+                }
+            });
+            fetchEventsThread.Start();
         }
+
 
         public void PostStatus(string i_Message, TextBox i_StatusTextBox)
         {
