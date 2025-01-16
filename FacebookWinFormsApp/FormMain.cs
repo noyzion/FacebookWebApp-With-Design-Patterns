@@ -165,7 +165,7 @@ namespace BasicFacebookFeatures
         }
         private void posts_Click(object sender, EventArgs e)
         {
-                        m_FacebookFacade.FetchPosts(dataListBox);
+            m_FacebookFacade.FetchPosts(dataListBox);
         }
         private void photos_Click(object sender, EventArgs e)
         {

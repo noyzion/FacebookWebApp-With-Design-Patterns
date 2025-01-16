@@ -1,4 +1,5 @@
 ﻿using CefSharp.DevTools.IndexedDB;
+using FacebookWrapper;
 using FacebookWrapper.ObjectModel;
 using System;
 using System.Drawing;
@@ -15,6 +16,7 @@ namespace BasicFacebookFeatures
         private const int k_AlbumFormHeight = 600;
         private const int k_PictureInAlbumSize = 200;
         private readonly object fetchLock = new object();  // Lock object for thread synchronization
+        private readonly object postLock = new object();
 
         public FacebookManagerUI(FacebookManager i_FacebookLogic)
         {
@@ -262,27 +264,45 @@ namespace BasicFacebookFeatures
 
         public void PostStatus(string i_Message, TextBox i_StatusTextBox)
         {
-            try
+            //
+            Thread postThread = new Thread(() =>
             {
-                Status postedStatus = r_FacebookLogic.PostStatus(i_Message);
-                MessageBox.Show($"Status posted! ID: {postedStatus.Id}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            finally
-            {
-                i_StatusTextBox.Clear();
-            }
+                lock (postLock)
+                {
+                    try
+                    {
+                        Status postedStatus = r_FacebookLogic.PostStatus(i_Message);
+                        i_StatusTextBox.Invoke(new Action(() =>
+                        {
+                            MessageBox.Show($"Status posted! ID: {postedStatus.Id}");
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        i_StatusTextBox.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }));
+                    }
+                    finally
+                    {
+                        i_StatusTextBox.Invoke(new Action(() =>
+                        {
+                            i_StatusTextBox.Clear();
+                        }));
+                    }
+                }
+            });
+            postThread.Start();
         }
+    
 
         public void PostPhoto(string i_FilePath)
         {
             try
             {
-                r_FacebookLogic.PostPhoto(i_FilePath);
-                MessageBox.Show("Photo posted successfully!");
+               Post post =  r_FacebookLogic.PostPhoto(i_FilePath);
+               MessageBox.Show("Photo posted successfully!");
             }
             catch (Exception ex)
             {
