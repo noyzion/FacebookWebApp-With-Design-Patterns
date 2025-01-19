@@ -243,7 +243,7 @@ namespace BasicFacebookFeatures
                 }
                 else if (dataListBox.SelectedItem is Album selectedAlbum)
                 {
-                    m_FacebookFacade.MakeAlbumPanel(ref dataPanel, selectedAlbum, pictureBoxProfile);
+                    m_FacebookFacade.MakeAlbumPanel(ref dataPanel, dataListBox, selectedAlbum, pictureBoxProfile);
                 }
                 else if (dataListBox.SelectedItem is Group selectedGroup)
                 {

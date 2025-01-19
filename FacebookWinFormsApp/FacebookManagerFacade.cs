@@ -91,9 +91,9 @@ namespace BasicFacebookFeatures
             r_FacebookUI.MakeEventPanel(ref io_DataPanel, i_FbEvent);
         }
 
-        public void MakeAlbumPanel(ref TableLayoutPanel io_DataPanel, Album i_Album, PictureBox i_PictureBoxProfile)
+        public void MakeAlbumPanel(ref TableLayoutPanel io_DataPanel,ListBox i_DataListBox, Album i_Album, PictureBox i_PictureBoxProfile)
         {
-            r_FacebookUI.MakeAlbumPanel(ref io_DataPanel, i_Album, i_PictureBoxProfile);
+            r_FacebookUI.MakeAlbumPanel( ref io_DataPanel, i_Album,i_DataListBox,i_PictureBoxProfile);
         }
 
         public void MakePostPanel(ref TableLayoutPanel io_DataPanel, Post i_Post)

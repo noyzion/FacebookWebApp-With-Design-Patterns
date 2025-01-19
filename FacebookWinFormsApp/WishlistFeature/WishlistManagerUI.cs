@@ -18,47 +18,47 @@ namespace BasicFacebookFeatures
         private const int k_PictureBoxItemSize = 60;
         private const int k_PictureBoxLocationX = 5;
         private const int k_PictureBoxLocationY = 30;
-        public void UpdateCheckedListBox(CheckedListBox foodListBox, CheckedListBox petsListBox,
-                                         CheckedListBox activitiesListBox, CheckedListBox shoppingListBox,
-                                         string category, WishListItem wishlistItem)
+        public void UpdateCheckedListBox(CheckedListBox i_FoodListBox, CheckedListBox i_PetsListBox,
+                                         CheckedListBox i_ActivitiesListBox, CheckedListBox i_ShoppingListBox,
+                                         string i_Category, WishListItem i_WishlistItem)
         {
-            switch (category)
+            switch (i_Category)
             {
                 case nameof(EWishlistCategories.Food):
-                    foodListBox.Items.Add(wishlistItem);
+                    i_FoodListBox.Items.Add(i_WishlistItem);
                     break;
                 case nameof(EWishlistCategories.Shopping):
-                    shoppingListBox.Items.Add(wishlistItem);
+                    i_ShoppingListBox.Items.Add(i_WishlistItem);
                     break;
                 case nameof(EWishlistCategories.Activities):
-                    activitiesListBox.Items.Add(wishlistItem);
+                    i_ActivitiesListBox.Items.Add(i_WishlistItem);
                     break;
                 case nameof(EWishlistCategories.Pets):
-                    petsListBox.Items.Add(wishlistItem);
+                    i_PetsListBox.Items.Add(i_WishlistItem);
                     break;
                 default:
                     throw new ArgumentException("Invalid category.");
             }
         }
 
-        public void ResetWishlistUI(CheckedListBox foodListBox, CheckedListBox petsListBox,
-                                     CheckedListBox activitiesListBox, CheckedListBox shoppingListBox)
+        public void ResetWishlistUI(CheckedListBox i_FoodListBox, CheckedListBox i_PetsListBox,
+                                     CheckedListBox i_ActivitiesListBox, CheckedListBox i_ShoppingListBox)
         {
-            foodListBox.Items.Clear();
-            petsListBox.Items.Clear();
-            activitiesListBox.Items.Clear();
-            shoppingListBox.Items.Clear();
+            i_FoodListBox.Items.Clear();
+            i_PetsListBox.Items.Clear();
+            i_ActivitiesListBox.Items.Clear();
+            i_ShoppingListBox.Items.Clear();
         }
-        public void HighlightItemInList(WishListItem item, PictureBox pictureBox, Button deleteButton)
+        public void HighlightItemInList(WishListItem i_Item, PictureBox i_PictureBox, Button i_DeleteButton)
         {
-            if (item != null)
+            if (i_Item != null)
             {
-                if (!string.IsNullOrEmpty(item.PhotoUrl))
+                if (!string.IsNullOrEmpty(i_Item.PhotoUrl))
                 {
                     try
                     {
-                        pictureBox.Image = Image.FromFile(item.PhotoUrl);
-                        pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                        i_PictureBox.Image = Image.FromFile(i_Item.PhotoUrl);
+                        i_PictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     }
                     catch (Exception ex)
                     {
@@ -67,18 +67,17 @@ namespace BasicFacebookFeatures
                 }
                 else
                 {
-                    pictureBox.Image = null;
+                    i_PictureBox.Image = null;
                 }
 
-                deleteButton.Enabled = true;
+                i_DeleteButton.Enabled = true;
             }
             else
             {
-                pictureBox.Image = null;
-                deleteButton.Enabled = false;
+                i_PictureBox.Image = null;
+                i_DeleteButton.Enabled = false;
             }
         }
-
         public void DisplayCombinedWishlistPopup(CheckedListBox i_FoodListBox, CheckedListBox i_ActivitiesListBox,
                                               CheckedListBox i_PetsListBox, CheckedListBox i_ShoppingListBox)
         {
@@ -117,12 +116,14 @@ namespace BasicFacebookFeatures
                 foreach (WishListItem item in i_CheckedListBox.Items)
                 {
                     Panel itemPanel = createItemPanel(item);
+
                     categoryPanel.Controls.Add(itemPanel);
                 }
             }
             else
             {
                 Label emptyMessage = createEmptyMessageLabel();
+
                 categoryPanel.Controls.Add(emptyMessage);
             }
 
@@ -209,25 +210,5 @@ namespace BasicFacebookFeatures
                 Margin = new Padding(k_Padding)
             };
         }
-        public void LoadImageForPictureBoxInList(WishListItem i_WishlistItem, PictureBox i_ItemPictureBox)
-        {
-            if (i_WishlistItem != null && i_WishlistItem.PhotoUrl != null)
-            {
-                try
-                {
-                    i_ItemPictureBox.Image = Image.FromFile(i_WishlistItem.PhotoUrl);
-                    i_ItemPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error loading image: {ex.Message}");
-                }
-            }
-            else
-            {
-                i_ItemPictureBox.Image = null;
-            }
-        }
-
     }
 }

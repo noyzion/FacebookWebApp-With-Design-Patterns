@@ -103,17 +103,17 @@
     <Compile Include="FacebookManagerUI.cs" />
     <Compile Include="FacebookManagerFacade.cs" />
     <Compile Include="IFacebookManager.cs" />
-    <Compile Include="IWishlistManager.cs" />
+    <Compile Include="WishlistFeature\IWishlistManager.cs" />
     <Compile Include="CategoryListWrapper.cs" />
-    <Compile Include="IWorkoutBuilder.cs" />
-    <Compile Include="WishlistFacade.cs" />
-    <Compile Include="WishListItem.cs" />
-    <Compile Include="WishListItemFactory.cs" />
-    <Compile Include="WishlistManagerUI.cs" />
-    <Compile Include="WorkoutBuilder.cs" />
-    <Compile Include="WorkoutComposer.cs" />
-    <Compile Include="WorkoutFacade.cs" />
-    <Compile Include="WorkoutManager.cs" />
+    <Compile Include="WorkoutFeature\IWorkoutBuilder.cs" />
+    <Compile Include="WishlistFeature\WishlistFacade.cs" />
+    <Compile Include="WishlistFeature\WishListItem.cs" />
+    <Compile Include="WishlistFeature\WishListItemFactory.cs" />
+    <Compile Include="WishlistFeature\WishlistManagerUI.cs" />
+    <Compile Include="WorkoutFeature\WorkoutBuilder.cs" />
+    <Compile Include="WorkoutFeature\WorkoutComposer.cs" />
+    <Compile Include="WorkoutFeature\WorkoutFacade.cs" />
+    <Compile Include="WorkoutFeature\WorkoutManager.cs" />
     <Compile Include="EWishlistCategories.cs" />
     <Compile Include="FormAppSettings.cs">
       <SubType>Form</SubType>
@@ -141,9 +141,9 @@
     <Compile Include="StatisicsForm.Designer.cs">
       <DependentUpon>StatisicsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="WishlistManager.cs" />
-    <Compile Include="Workout.cs" />
-    <Compile Include="WorkoutManagerUI.cs" />
+    <Compile Include="WishlistFeature\WishlistManager.cs" />
+    <Compile Include="WorkoutFeature\Workout.cs" />
+    <Compile Include="WorkoutFeature\WorkoutManagerUI.cs" />
     <EmbeddedResource Include="StatisicsForm.resx">
       <DependentUpon>StatisicsForm.cs</DependentUpon>
     </EmbeddedResource>
