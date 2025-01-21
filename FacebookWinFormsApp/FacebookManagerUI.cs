@@ -11,27 +11,26 @@ namespace BasicFacebookFeatures
 {
     public class FacebookManagerUI
     {
-        private readonly FacebookManager r_FacebookLogic;
-        private const int k_pictureSize = 150;
+        private const int k_PictureSize = 150;
         private const int k_AlbumFormWidth = 450;
         private const int k_AlbumFormHeight = 600;
         private const int k_PictureInAlbumSize = 200;
-        private readonly object fetchLock = new object();  // Lock object for thread synchronization
-        private readonly object postLock = new object();
-        private readonly Dictionary<string, string> savedMessages = new Dictionary<string, string>();
+        private readonly FacebookManager r_FacebookLogic;
+        private readonly object r_FetchLock = new object();
+        private readonly object r_PostLock = new object();
+        private readonly Dictionary<string, string> r_SavedMessages = new Dictionary<string, string>();
 
         public FacebookManagerUI(FacebookManager i_FacebookLogic)
         {
             r_FacebookLogic = i_FacebookLogic;
         }
-
         public void FetchGroups(ListBox i_DataListBox)
         {
             Thread fetchGroupsThread = new Thread(() =>
             {
                 try
                 {
-                    lock (fetchLock)
+                    lock (r_FetchLock)
                     {
                         var groups = r_FacebookLogic.FetchGroups();
 
@@ -40,7 +39,6 @@ namespace BasicFacebookFeatures
                             i_DataListBox.DataSource = null;
                             i_DataListBox.Items.Clear();
                             i_DataListBox.DisplayMember = "Name";
-
                             foreach (var group in groups)
                             {
                                 i_DataListBox.Items.Add(group);
@@ -61,6 +59,7 @@ namespace BasicFacebookFeatures
                     }));
                 }
             });
+
             fetchGroupsThread.Start();
         }
         public void FetchAlbums(ListBox i_DataListBox)
@@ -69,7 +68,7 @@ namespace BasicFacebookFeatures
             {
                 try
                 {
-                    lock (fetchLock)
+                    lock (r_FetchLock)
                     {
                         var albums = r_FacebookLogic.FetchAlbums();
 
@@ -78,7 +77,6 @@ namespace BasicFacebookFeatures
                             i_DataListBox.DataSource = null;
                             i_DataListBox.Items.Clear();
                             i_DataListBox.DisplayMember = "Name";
-
                             foreach (var album in albums)
                             {
                                 i_DataListBox.Items.Add(album);
@@ -99,6 +97,7 @@ namespace BasicFacebookFeatures
                     }));
                 }
             });
+
             fetchAlbumsThread.Start();
         }
         public void FetchFriends(ListBox i_DataListBox)
@@ -107,7 +106,7 @@ namespace BasicFacebookFeatures
             {
                 try
                 {
-                    lock (fetchLock)
+                    lock (r_FetchLock)
                     {
                         var friends = r_FacebookLogic.FetchFriends();
 
@@ -116,7 +115,6 @@ namespace BasicFacebookFeatures
                             i_DataListBox.DataSource = null;
                             i_DataListBox.Items.Clear();
                             i_DataListBox.DisplayMember = "Name";
-
                             foreach (var friend in friends)
                             {
                                 i_DataListBox.Items.Add(friend);
@@ -137,6 +135,7 @@ namespace BasicFacebookFeatures
                     }));
                 }
             });
+
             fetchFriendsThread.Start();
         }
         public void FetchPosts(ListBox i_DataListBox)
@@ -145,7 +144,7 @@ namespace BasicFacebookFeatures
             {
                 try
                 {
-                    lock (fetchLock)
+                    lock (r_FetchLock)
                     {
                         var posts = r_FacebookLogic.FetchPosts();
 
@@ -154,7 +153,6 @@ namespace BasicFacebookFeatures
                             i_DataListBox.DataSource = null;
                             i_DataListBox.Items.Clear();
                             i_DataListBox.DisplayMember = "UpdateTime";
-
                             foreach (var post in posts)
                             {
                                 if (post.Message != null || post.PictureURL != null)
@@ -178,6 +176,7 @@ namespace BasicFacebookFeatures
                     }));
                 }
             });
+
             fetchPostsThread.Start();
         }
         public void FetchLikedPages(ListBox i_DataListBox)
@@ -186,8 +185,7 @@ namespace BasicFacebookFeatures
             {
                 try
                 {
-                    // Locking to ensure thread safety
-                    lock (fetchLock)
+                    lock (r_FetchLock)
                     {
                         var likedPages = r_FacebookLogic.FetchLikedPages();
 
@@ -196,7 +194,6 @@ namespace BasicFacebookFeatures
                             i_DataListBox.DataSource = null;
                             i_DataListBox.Items.Clear();
                             i_DataListBox.DisplayMember = "Name";
-
                             foreach (var page in likedPages)
                             {
                                 i_DataListBox.Items.Add(page);
@@ -217,6 +214,7 @@ namespace BasicFacebookFeatures
                     }));
                 }
             });
+
             fetchLikedPagesThread.Start();
         }
         public void FetchEvents(ListBox i_DataListBox)
@@ -225,8 +223,7 @@ namespace BasicFacebookFeatures
             {
                 try
                 {
-                    // Locking to ensure thread safety
-                    lock (fetchLock)
+                    lock (r_FetchLock)
                     {
                         var events = r_FacebookLogic.FetchEvents();
 
@@ -235,7 +232,6 @@ namespace BasicFacebookFeatures
                             i_DataListBox.DataSource = null;
                             i_DataListBox.Items.Clear();
                             i_DataListBox.DisplayMember = "Name";
-
                             foreach (var fbEvent in events)
                             {
                                 i_DataListBox.Items.Add(fbEvent);
@@ -256,17 +252,19 @@ namespace BasicFacebookFeatures
                     }));
                 }
             });
+
             fetchEventsThread.Start();
         }
         public void PostStatus(string i_Message, TextBox i_StatusTextBox)
         {
             Thread postThread = new Thread(() =>
             {
-                lock (postLock)
+                lock (r_PostLock)
                 {
                     try
                     {
                         Status postedStatus = r_FacebookLogic.PostStatus(i_Message);
+
                         i_StatusTextBox.Invoke(new Action(() =>
                         {
                             MessageBox.Show($"Status posted! ID: {postedStatus.Id}");
@@ -288,14 +286,16 @@ namespace BasicFacebookFeatures
                     }
                 }
             });
+
             postThread.Start();
         }
         public void PostPhoto(string i_FilePath)
         {
             try
             {
-               Post post =  r_FacebookLogic.PostPhoto(i_FilePath);
-               MessageBox.Show("Photo posted successfully!");
+                Post post = r_FacebookLogic.PostPhoto(i_FilePath);
+
+                MessageBox.Show("Photo posted successfully!");
             }
             catch (Exception ex)
             {
@@ -323,6 +323,7 @@ namespace BasicFacebookFeatures
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+
                 return null;
             }
         }
@@ -347,6 +348,7 @@ namespace BasicFacebookFeatures
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+
                 return null;
             }
         }
@@ -408,7 +410,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"Error displaying friend details: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         public void MakeGroupsPanel(ref TableLayoutPanel io_DataPanel, Group i_Group, PictureBox i_PictureBoxProfile)
         {
             try
@@ -467,7 +468,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"Error displaying group details: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         public void MakePagePanel(ref TableLayoutPanel io_DataPanel, Page i_Page, PictureBox i_PictureBoxProfile)
         {
             try
@@ -526,7 +526,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"Error displaying page details: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         public void MakeEventPanel(ref TableLayoutPanel io_DataPanel, Event i_FbEvent)
         {
             try
@@ -585,8 +584,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"Error displaying event details: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
         public void MakePostPanel(ref TableLayoutPanel io_DataPanel, Post i_Post)
         {
             try
@@ -600,14 +597,19 @@ namespace BasicFacebookFeatures
                 Label messageLabel = new Label
                 {
                     AutoSize = true,
-                    Text = savedMessages.ContainsKey(i_Post.Id) ? savedMessages[i_Post.Id] : i_Post.Message,
+                    Text = r_SavedMessages.ContainsKey(i_Post.Id) ? r_SavedMessages[i_Post.Id] : i_Post.Message,
                     Font = new Font("Arial", 12, FontStyle.Bold),
                     Padding = new Padding(5)
                 };
 
-                io_DataPanel.Controls.Add(new Label { Text = "Message:", AutoSize = true, Font = new Font("Arial", 10, FontStyle.Regular), Padding = new Padding(5) });
+                io_DataPanel.Controls.Add(new Label
+                {
+                    Text = "Message:",
+                    AutoSize = true,
+                    Font = new Font("Arial", 10, FontStyle.Regular),
+                    Padding = new Padding(5)
+                });
                 io_DataPanel.Controls.Add(messageLabel);
-
                 Button editPostButton = new Button
                 {
                     Text = "Edit Post",
@@ -633,7 +635,7 @@ namespace BasicFacebookFeatures
                         Multiline = true,
                         Width = 350,
                         Height = 150,
-                        Text = savedMessages.ContainsKey(i_Post.Id) ? savedMessages[i_Post.Id] : i_Post.Message,
+                        Text = r_SavedMessages.ContainsKey(i_Post.Id) ? r_SavedMessages[i_Post.Id] : i_Post.Message,
                         Font = new Font("Arial", 10, FontStyle.Regular),
                         Margin = new Padding(10)
                     };
@@ -661,7 +663,7 @@ namespace BasicFacebookFeatures
                         {
                             if (!string.IsNullOrEmpty(i_Post.Id))
                             {
-                                savedMessages[i_Post.Id] = updatedMessage;
+                                r_SavedMessages[i_Post.Id] = updatedMessage;
                                 messageLabel.Text = updatedMessage;
                                 MessageBox.Show("Message saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 editForm.Close();
@@ -683,7 +685,6 @@ namespace BasicFacebookFeatures
                 };
 
                 io_DataPanel.Controls.Add(editPostButton);
-
                 PictureBox thisPostPicture = new PictureBox
                 {
                     SizeMode = PictureBoxSizeMode.StretchImage,
@@ -705,8 +706,8 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"Error displaying post details: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        public void MakeAlbumPanel(ref TableLayoutPanel io_DataPanel, Album i_Album, ListBox i_DataListBox, PictureBox i_PictureBoxProfile)
+        public void MakeAlbumPanel(ref TableLayoutPanel io_DataPanel, Album i_Album,
+                                   ListBox i_DataListBox, PictureBox i_PictureBoxProfile)
         {
             try
             {
@@ -723,7 +724,6 @@ namespace BasicFacebookFeatures
                 };
 
                 albumNameLabel.DataBindings.Add("Text", albumBindingSource, "Name");
-
                 Label editLabel = new Label
                 {
                     Text = "Edit Album Name:",
@@ -740,12 +740,10 @@ namespace BasicFacebookFeatures
                 };
 
                 albumNameTextBox.DataBindings.Add("Text", albumBindingSource, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
-
                 io_DataPanel.Controls.Add(new Label { Text = "Album Name:", AutoSize = true, Font = new Font("Arial", 12, FontStyle.Bold), Padding = new Padding(5) });
                 io_DataPanel.Controls.Add(albumNameLabel);
                 io_DataPanel.Controls.Add(editLabel);
                 io_DataPanel.Controls.Add(albumNameTextBox);
-
                 Label countLabel = new Label
                 {
                     Text = $"Photos: {i_Album.Count}",
@@ -755,7 +753,6 @@ namespace BasicFacebookFeatures
                 };
 
                 io_DataPanel.Controls.Add(countLabel);
-
                 PictureBox albumPicture = new PictureBox
                 {
                     SizeMode = PictureBoxSizeMode.StretchImage,
@@ -774,7 +771,6 @@ namespace BasicFacebookFeatures
                 }
 
                 io_DataPanel.Controls.Add(albumPicture);
-
                 Button openAlbumButton = new Button
                 {
                     Text = "Open Album",
@@ -785,10 +781,10 @@ namespace BasicFacebookFeatures
                 };
 
                 io_DataPanel.Controls.Add(openAlbumButton);
-
                 openAlbumButton.Click += (sender, e) =>
                 {
                     Thread openAlbumThread = new Thread(() => OpenAlbumPhotos(i_Album, i_PictureBoxProfile));
+
                     openAlbumThread.SetApartmentState(ApartmentState.STA);
                     openAlbumThread.Start();
                 };
@@ -796,6 +792,7 @@ namespace BasicFacebookFeatures
                 albumBindingSource.CurrentItemChanged += (sender, e) =>
                 {
                     int index = i_DataListBox.Items.IndexOf(i_Album);
+
                     if (index >= 0)
                     {
                         i_DataListBox.Items[index] = i_Album;
@@ -807,7 +804,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"Error displaying album details: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void OpenAlbumPhotos(Album i_Album, PictureBox i_PictureBoxProfile)
         {
             Form albumForm = new Form

@@ -61,6 +61,7 @@ namespace BasicFacebookFeatures
             this.groupsPicture = new System.Windows.Forms.PictureBox();
             this.rememberMeCheckBox = new System.Windows.Forms.CheckBox();
             this.panelWorkoutFeature = new System.Windows.Forms.Panel();
+            this.buttonShareWorkout = new System.Windows.Forms.Button();
             this.buttonStatistics = new System.Windows.Forms.Button();
             this.panelWorkouts = new System.Windows.Forms.Panel();
             this.buttonAddWorkout = new System.Windows.Forms.Button();
@@ -87,7 +88,7 @@ namespace BasicFacebookFeatures
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.labelWishlistHeader = new System.Windows.Forms.Label();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
-            this.buttonShareWorkout = new System.Windows.Forms.Button();
+            this.buttonInviteFriends = new System.Windows.Forms.Button();
             this.tabControlMainForm.SuspendLayout();
             this.tabFeed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxProfile)).BeginInit();
@@ -224,9 +225,9 @@ namespace BasicFacebookFeatures
             this.panelStatus.Controls.Add(this.buttonAddPost);
             this.panelStatus.Controls.Add(this.buttonAddPicture);
             this.panelStatus.Controls.Add(this.textBoxStatus);
-            this.panelStatus.Location = new System.Drawing.Point(430, 558);
+            this.panelStatus.Location = new System.Drawing.Point(430, 563);
             this.panelStatus.Name = "panelStatus";
-            this.panelStatus.Size = new System.Drawing.Size(785, 90);
+            this.panelStatus.Size = new System.Drawing.Size(793, 85);
             this.panelStatus.TabIndex = 84;
             // 
             // labelAddStatus
@@ -337,7 +338,7 @@ namespace BasicFacebookFeatures
             this.dataPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.dataPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.dataPanel.Font = new System.Drawing.Font("Arial Narrow", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dataPanel.Location = new System.Drawing.Point(430, 188);
+            this.dataPanel.Location = new System.Drawing.Point(430, 198);
             this.dataPanel.Name = "dataPanel";
             this.dataPanel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.dataPanel.RowCount = 2;
@@ -519,23 +520,42 @@ namespace BasicFacebookFeatures
             // panelWorkoutFeature
             // 
             this.panelWorkoutFeature.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelWorkoutFeature.Controls.Add(this.buttonInviteFriends);
             this.panelWorkoutFeature.Controls.Add(this.buttonShareWorkout);
             this.panelWorkoutFeature.Controls.Add(this.buttonStatistics);
             this.panelWorkoutFeature.Controls.Add(this.panelWorkouts);
             this.panelWorkoutFeature.Controls.Add(this.buttonAddWorkout);
             this.panelWorkoutFeature.Location = new System.Drawing.Point(609, 28);
             this.panelWorkoutFeature.Name = "panelWorkoutFeature";
-            this.panelWorkoutFeature.Size = new System.Drawing.Size(618, 145);
+            this.panelWorkoutFeature.Size = new System.Drawing.Size(623, 165);
             this.panelWorkoutFeature.TabIndex = 86;
+            // 
+            // buttonShareWorkout
+            // 
+            this.buttonShareWorkout.BackColor = System.Drawing.Color.RoyalBlue;
+            this.buttonShareWorkout.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.buttonShareWorkout.Enabled = false;
+            this.buttonShareWorkout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonShareWorkout.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonShareWorkout.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.buttonShareWorkout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonShareWorkout.Location = new System.Drawing.Point(513, 86);
+            this.buttonShareWorkout.Name = "buttonShareWorkout";
+            this.buttonShareWorkout.Size = new System.Drawing.Size(88, 29);
+            this.buttonShareWorkout.TabIndex = 90;
+            this.buttonShareWorkout.Text = "share\r\n";
+            this.buttonShareWorkout.UseVisualStyleBackColor = false;
+            this.buttonShareWorkout.Click += new System.EventHandler(this.shareWorkoutButton_Click);
             // 
             // buttonStatistics
             // 
             this.buttonStatistics.BackColor = System.Drawing.Color.PaleGreen;
             this.buttonStatistics.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.buttonStatistics.Enabled = false;
             this.buttonStatistics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonStatistics.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStatistics.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonStatistics.Location = new System.Drawing.Point(511, 51);
+            this.buttonStatistics.Location = new System.Drawing.Point(514, 51);
             this.buttonStatistics.Name = "buttonStatistics";
             this.buttonStatistics.Size = new System.Drawing.Size(88, 29);
             this.buttonStatistics.TabIndex = 89;
@@ -547,7 +567,7 @@ namespace BasicFacebookFeatures
             // 
             this.panelWorkouts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelWorkouts.Font = new System.Drawing.Font("Arial Narrow", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panelWorkouts.Location = new System.Drawing.Point(3, 4);
+            this.panelWorkouts.Location = new System.Drawing.Point(4, 15);
             this.panelWorkouts.Name = "panelWorkouts";
             this.panelWorkouts.Size = new System.Drawing.Size(488, 137);
             this.panelWorkouts.TabIndex = 88;
@@ -556,12 +576,14 @@ namespace BasicFacebookFeatures
             // 
             this.buttonAddWorkout.BackColor = System.Drawing.Color.LightYellow;
             this.buttonAddWorkout.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.buttonAddWorkout.Enabled = false;
             this.buttonAddWorkout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonAddWorkout.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonAddWorkout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonAddWorkout.Location = new System.Drawing.Point(497, 7);
+            this.buttonAddWorkout.Location = new System.Drawing.Point(501, 18);
+            this.buttonAddWorkout.Margin = new System.Windows.Forms.Padding(4, 3, 3, 3);
             this.buttonAddWorkout.Name = "buttonAddWorkout";
-            this.buttonAddWorkout.Size = new System.Drawing.Size(116, 35);
+            this.buttonAddWorkout.Size = new System.Drawing.Size(116, 27);
             this.buttonAddWorkout.TabIndex = 87;
             this.buttonAddWorkout.Text = "Add Workout";
             this.buttonAddWorkout.UseVisualStyleBackColor = false;
@@ -835,21 +857,22 @@ namespace BasicFacebookFeatures
             this.labelWishlistHeader.TabIndex = 0;
             this.labelWishlistHeader.Text = "My Wishlist";
             // 
-            // buttonShareWorkout
+            // buttonInviteFriends
             // 
-            this.buttonShareWorkout.BackColor = System.Drawing.Color.RoyalBlue;
-            this.buttonShareWorkout.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.buttonShareWorkout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonShareWorkout.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonShareWorkout.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.buttonShareWorkout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonShareWorkout.Location = new System.Drawing.Point(511, 108);
-            this.buttonShareWorkout.Name = "buttonShareWorkout";
-            this.buttonShareWorkout.Size = new System.Drawing.Size(88, 29);
-            this.buttonShareWorkout.TabIndex = 90;
-            this.buttonShareWorkout.Text = "share\r\n";
-            this.buttonShareWorkout.UseVisualStyleBackColor = false;
-            this.buttonShareWorkout.Click += new System.EventHandler(this.shareWorkoutButton_Click);
+            this.buttonInviteFriends.BackColor = System.Drawing.Color.LightPink;
+            this.buttonInviteFriends.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.buttonInviteFriends.Enabled = false;
+            this.buttonInviteFriends.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonInviteFriends.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonInviteFriends.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.buttonInviteFriends.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonInviteFriends.Location = new System.Drawing.Point(521, 121);
+            this.buttonInviteFriends.Name = "buttonInviteFriends";
+            this.buttonInviteFriends.Size = new System.Drawing.Size(71, 29);
+            this.buttonInviteFriends.TabIndex = 91;
+            this.buttonInviteFriends.Text = "invite";
+            this.buttonInviteFriends.UseVisualStyleBackColor = false;
+            this.buttonInviteFriends.Click += new System.EventHandler(this.buttonInviteFriends_Click);
             // 
             // FormMain
             // 
@@ -945,6 +968,7 @@ namespace BasicFacebookFeatures
         private System.Windows.Forms.Button buttonStatistics;
         private System.Windows.Forms.Panel panelWorkouts;
         private System.Windows.Forms.Button buttonShareWorkout;
+        private System.Windows.Forms.Button buttonInviteFriends;
     }
 }
 

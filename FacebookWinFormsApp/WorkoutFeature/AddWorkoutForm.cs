@@ -11,13 +11,11 @@ namespace BasicFacebookFeatures
         private bool m_DateTimeChanged;
         private bool m_CaloriesChanged;
         private bool m_DurationChanged;
-        private readonly DataGridView r_WorkoutTable;
-        private readonly WorkoutManager r_WorkoutManager;
-        public AddWorkoutForm(DataGridView i_WorkoutTable, WorkoutManager i_WorkoutManager)
+        private readonly WorkoutFacade r_WorkoutFacade;
+        public AddWorkoutForm(WorkoutFacade i_WorkoutFacade)
         {
             InitializeComponent();
-            this.r_WorkoutTable = i_WorkoutTable;
-            this.r_WorkoutManager = i_WorkoutManager;
+            this.r_WorkoutFacade = i_WorkoutFacade;
         }
         private void comboBoxWorkoutCategory_TextChanged(object sender, EventArgs e)
         {
@@ -54,17 +52,8 @@ namespace BasicFacebookFeatures
                 WorkoutComposer composer = new WorkoutComposer();
                 Workout workout = composer.ComposeWorkout(duration, category, date, calories);
 
-                if (r_WorkoutManager.Workouts == null)
-                {
-                    r_WorkoutManager.Workouts = new List<Workout>();
-                }
-
-                r_WorkoutManager.Workouts.Add(workout);
-                r_WorkoutManager.FetchWorkoutData(r_WorkoutTable);
-
-                // Post the workout details to Facebook
-                //postWorkoutToFacebook(workout);
-
+                r_WorkoutFacade.AddWorkout(workout);
+                r_WorkoutFacade.FetchWorkoutData();
                 MessageBox.Show("Workout saved successfully!");
                 this.Close();
             }

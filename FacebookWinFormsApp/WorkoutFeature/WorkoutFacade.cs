@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FacebookWrapper.ObjectModel;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -6,7 +7,7 @@ namespace BasicFacebookFeatures
 {
     public class WorkoutFacade
     {
-        public  WorkoutManager WorkoutManager { get; set; }
+        public WorkoutManager WorkoutManager { get; set; }
         private readonly DataGridView r_WorkoutTable;
         private readonly WorkoutManagerUI r_WorkoutManagerUI;
 
@@ -14,13 +15,13 @@ namespace BasicFacebookFeatures
         {
             WorkoutManager = new WorkoutManager();
             r_WorkoutManagerUI = new WorkoutManagerUI();
+
             r_WorkoutTable = WorkoutManager.InitializeWorkoutTable();
         }
         public DataGridView GetWorkoutTable()
         {
             return r_WorkoutTable;
         }
-
         public void ResetWorkoutTable()
         {
             r_WorkoutTable.Rows.Clear();
@@ -29,35 +30,32 @@ namespace BasicFacebookFeatures
         {
             WorkoutManager.FetchWorkoutData(r_WorkoutTable);
         }
-
-        public void AddWorkout(Workout workout)
+        public void AddWorkout(Workout i_Workout)
         {
             if (WorkoutManager.Workouts == null)
             {
                 WorkoutManager.Workouts = new List<Workout>();
             }
-            WorkoutManager.Workouts.Add(workout);
+
+            WorkoutManager.Workouts.Add(i_Workout);
             FetchWorkoutData();
         }
-
-        public void RemoveWorkout(Workout workout)
-        {
-            if (WorkoutManager.Workouts != null)
-            {
-                WorkoutManager.Workouts.Remove(workout);
-                FetchWorkoutData();
-            }
-        }
-
         public List<Workout> GetWorkouts()
         {
             return WorkoutManager.Workouts;
+        }
+        public void SetWorkouts(List<Workout> i_Workouts)
+        {
+            WorkoutManager.Workouts = i_Workouts;
         }
         public string PreparePostWorkouts()
         {
             r_WorkoutManagerUI.DisplayWorkoutsPopup(WorkoutManager.Workouts);
             return WorkoutManager.GenerateWorkoutsSummary();
         }
-
+        public void DisplayInviteFriendsPost(List<User> i_Friends)
+        {
+             r_WorkoutManagerUI.DisplayFriendsPopup(i_Friends);
+        }
     }
 }

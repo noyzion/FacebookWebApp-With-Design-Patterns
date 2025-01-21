@@ -10,7 +10,6 @@ namespace BasicFacebookFeatures
      public partial class FormAppSettings : Form
     {
         private readonly AppSettings r_AppSettings;
-        private readonly StringBuilder r_PermissionsStringBuilder = new StringBuilder();
 
         public FormAppSettings(AppSettings i_AppSettings)
         {

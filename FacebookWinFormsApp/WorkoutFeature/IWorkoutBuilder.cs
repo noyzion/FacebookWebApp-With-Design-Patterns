@@ -8,10 +8,10 @@ namespace BasicFacebookFeatures
 {
     public interface IWorkoutBuilder
     {
-        void SetDuration(decimal duration);
-        void SetCategory(string category);
-        void SetDate(DateTime date);
-        void SetCalories(decimal calories);
+        void SetDuration(decimal i_Duration);
+        void SetCategory(string i_Category);
+        void SetDate(DateTime i_Date);
+        void SetCalories(decimal i_Calories);
         Workout GetWorkout();
     }
 }

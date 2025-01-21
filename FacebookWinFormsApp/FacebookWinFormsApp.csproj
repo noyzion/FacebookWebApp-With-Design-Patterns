@@ -91,20 +91,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddWorkoutForm.cs">
+    <Compile Include="WorkoutFeature\AddWorkoutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddWorkoutForm.Designer.cs">
+    <Compile Include="WorkoutFeature\AddWorkoutForm.Designer.cs">
       <DependentUpon>AddWorkoutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AppSettings.cs" />
     <Compile Include="EProfileOption.cs" />
     <Compile Include="FacebookManager.cs" />
     <Compile Include="FacebookManagerUI.cs" />
-    <Compile Include="FacebookManagerFacade.cs" />
-    <Compile Include="IFacebookManager.cs" />
+    <Compile Include="FacebookFacade.cs" />
     <Compile Include="WishlistFeature\IWishlistManager.cs" />
     <Compile Include="CategoryListWrapper.cs" />
+    <Compile Include="WorkoutFeature\InviteFriendsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WorkoutFeature\InviteFriendsForm.Designer.cs">
+      <DependentUpon>InviteFriendsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WorkoutFeature\IWorkoutBuilder.cs" />
     <Compile Include="WishlistFeature\WishlistFacade.cs" />
     <Compile Include="WishlistFeature\WishListItem.cs" />
@@ -147,10 +152,13 @@
     <EmbeddedResource Include="StatisicsForm.resx">
       <DependentUpon>StatisicsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WorkoutFeature\InviteFriendsForm.resx">
+      <DependentUpon>InviteFriendsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </None>
-    <EmbeddedResource Include="AddWorkoutForm.resx">
+    <EmbeddedResource Include="WorkoutFeature\AddWorkoutForm.resx">
       <DependentUpon>AddWorkoutForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormAppSettings.resx">

@@ -9,7 +9,7 @@ namespace BasicFacebookFeatures
 {
     public class WishlistFacade
     {
-       public WishlistManager WishlistManager { get; set; }
+        public WishlistManager WishlistManager { get; set; }
         private readonly WishlistUIManager r_WishlistUIManager;
 
         public WishlistFacade()
@@ -67,7 +67,7 @@ namespace BasicFacebookFeatures
             wishlistSummary.AppendLine($"Activities: {getCheckedItems(i_ActivitiesListBox)}");
             wishlistSummary.AppendLine($"Pets: {getCheckedItems(i_PetsListBox)}");
             wishlistSummary.AppendLine($"Shopping: {getCheckedItems(i_ShoppingListBox)}");
-            r_WishlistUIManager.DisplayCombinedWishlistPopup(i_FoodListBox,i_ActivitiesListBox, i_PetsListBox, i_ShoppingListBox);
+            r_WishlistUIManager.DisplayCombinedWishlistPopup(i_FoodListBox, i_ActivitiesListBox, i_PetsListBox, i_ShoppingListBox);
             return wishlistSummary.ToString();
         }
 

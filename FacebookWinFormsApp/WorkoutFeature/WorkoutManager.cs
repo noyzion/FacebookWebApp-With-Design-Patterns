@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Runtime.Serialization;
 using System.Text;
+using FacebookWrapper.ObjectModel;
 
 namespace BasicFacebookFeatures
 {
@@ -10,6 +11,7 @@ namespace BasicFacebookFeatures
     {
         public List<Workout> Workouts { get; set; }
         private readonly string[] r_ColumnNames = { "Category", "Duration", "Calories", "Date" };
+
         public DataGridView InitializeWorkoutTable()
         {
             DataGridView workoutTable = new DataGridView
@@ -48,6 +50,7 @@ namespace BasicFacebookFeatures
             }
 
             StringBuilder summaryBuilder = new StringBuilder();
+
             summaryBuilder.AppendLine("My Recent Workouts:");
             foreach (Workout workout in Workouts)
             {

@@ -12,14 +12,15 @@ namespace BasicFacebookFeatures
 
         public WorkoutComposer()
         {
-             r_Builder = new WorkoutBuilder();
+            r_Builder = new WorkoutBuilder();
         }
-        public Workout ComposeWorkout(decimal duration, string category, DateTime date, decimal calories)
+        public Workout ComposeWorkout(decimal i_Duration, string i_Category, DateTime i_Date, decimal i_Calories)
         {
-            r_Builder.SetDuration(duration);
-            r_Builder.SetCategory(category);
-            r_Builder.SetDate(date);
-            r_Builder.SetCalories(calories);
+            r_Builder.SetDuration(i_Duration);
+            r_Builder.SetCategory(i_Category);
+            r_Builder.SetDate(i_Date);
+            r_Builder.SetCalories(i_Calories);
+
             return r_Builder.GetWorkout();
         }
     }
