@@ -68,6 +68,7 @@ namespace BasicFacebookFeatures
             wishlistSummary.AppendLine($"Pets: {getCheckedItems(i_PetsListBox)}");
             wishlistSummary.AppendLine($"Shopping: {getCheckedItems(i_ShoppingListBox)}");
             r_WishlistUIManager.DisplayCombinedWishlistPopup(i_FoodListBox, i_ActivitiesListBox, i_PetsListBox, i_ShoppingListBox);
+            
             return wishlistSummary.ToString();
         }
 
@@ -78,7 +79,9 @@ namespace BasicFacebookFeatures
         public WishListItem FindAndHighlightItem(string i_Category, string i_ItemName, PictureBox i_PictureBox, Button i_DeleteButton)
         {
             WishListItem item = WishlistManager.FindWishListItemByName(i_Category, i_ItemName);
+
             r_WishlistUIManager.HighlightItemInList(item, i_PictureBox, i_DeleteButton);
+            
             return item;
         }
         public List<WishListItem> GetItemsByCategory(string i_Category)

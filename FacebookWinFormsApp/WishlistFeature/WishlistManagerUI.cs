@@ -89,7 +89,6 @@ namespace BasicFacebookFeatures
                 StartPosition = FormStartPosition.CenterScreen,
                 AutoScroll = true
             };
-
             FlowLayoutPanel mainPanel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -161,7 +160,6 @@ namespace BasicFacebookFeatures
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(k_Padding)
             };
-
             Label labelWishlistItem = createItemLabel(i_WishlistItem);
             PictureBox pictureBoxWishlistItem = createItemPictureBox(i_WishlistItem);
 

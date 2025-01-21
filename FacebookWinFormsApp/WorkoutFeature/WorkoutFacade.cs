@@ -40,22 +40,15 @@ namespace BasicFacebookFeatures
             WorkoutManager.Workouts.Add(i_Workout);
             FetchWorkoutData();
         }
-        public List<Workout> GetWorkouts()
-        {
-            return WorkoutManager.Workouts;
-        }
-        public void SetWorkouts(List<Workout> i_Workouts)
-        {
-            WorkoutManager.Workouts = i_Workouts;
-        }
         public string PreparePostWorkouts()
         {
             r_WorkoutManagerUI.DisplayWorkoutsPopup(WorkoutManager.Workouts);
+
             return WorkoutManager.GenerateWorkoutsSummary();
         }
         public void DisplayInviteFriendsPost(List<User> i_Friends)
         {
-             r_WorkoutManagerUI.DisplayFriendsPopup(i_Friends);
+            r_WorkoutManagerUI.DisplayFriendsPopup(i_Friends);
         }
     }
 }

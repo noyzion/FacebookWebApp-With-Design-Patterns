@@ -46,11 +46,11 @@ namespace BasicFacebookFeatures.WorkoutFeature
                 return;
             }
 
-            var selectedFriends = listBoxFriends.CheckedItems.Cast<User>().ToList();
+            List<User> selectedFriends = listBoxFriends.CheckedItems.Cast<User>().ToList();
 
             try
             {
-                var facebookCollection = new FacebookObjectCollection<User>();
+                FacebookObjectCollection<User> facebookCollection = new FacebookObjectCollection<User>();
 
                 foreach (var friend in selectedFriends)
                 {

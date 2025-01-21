@@ -12,7 +12,6 @@ namespace BasicFacebookFeatures
 {
     public class FacebookManagerUI
     {
-        private const int k_PictureSize = 150;
         private const int k_AlbumFormWidth = 450;
         private const int k_AlbumFormHeight = 600;
         private const int k_PictureInAlbumSize = 200;
@@ -33,7 +32,7 @@ namespace BasicFacebookFeatures
                 {
                     lock (r_FetchLock)
                     {
-                        var groups = r_FacebookLogic.FetchGroups();
+                        FacebookObjectCollection<Group> groups = r_FacebookLogic.FetchGroups();
 
                         i_DataListBox.Invoke(new Action(() =>
                         {
@@ -54,10 +53,7 @@ namespace BasicFacebookFeatures
                 }
                 catch (Exception ex)
                 {
-                    i_DataListBox.Invoke(new Action(() =>
-                    {
-                        MessageBox.Show($"Error fetching groups: {ex.Message}");
-                    }));
+                    i_DataListBox.Invoke(new Action(() => MessageBox.Show($"Error fetching groups: {ex.Message}")));
                 }
             });
 
@@ -71,7 +67,7 @@ namespace BasicFacebookFeatures
                 {
                     lock (r_FetchLock)
                     {
-                        var albums = r_FacebookLogic.FetchAlbums();
+                        FacebookObjectCollection<Album> albums = r_FacebookLogic.FetchAlbums();
 
                         i_DataListBox.Invoke(new Action(() =>
                         {
@@ -92,10 +88,7 @@ namespace BasicFacebookFeatures
                 }
                 catch (Exception ex)
                 {
-                    i_DataListBox.Invoke(new Action(() =>
-                    {
-                        MessageBox.Show($"Error fetching albums: {ex.Message}");
-                    }));
+                    i_DataListBox.Invoke(new Action(() => MessageBox.Show($"Error fetching albums: {ex.Message}")));
                 }
             });
 
@@ -109,7 +102,7 @@ namespace BasicFacebookFeatures
                 {
                     lock (r_FetchLock)
                     {
-                        var friends = r_FacebookLogic.FetchFriends();
+                        FacebookObjectCollection<User> friends = r_FacebookLogic.FetchFriends();
 
                         i_DataListBox.Invoke(new Action(() =>
                         {
@@ -130,10 +123,7 @@ namespace BasicFacebookFeatures
                 }
                 catch (Exception ex)
                 {
-                    i_DataListBox.Invoke(new Action(() =>
-                    {
-                        MessageBox.Show($"Error fetching friends: {ex.Message}");
-                    }));
+                    i_DataListBox.Invoke(new Action(() => MessageBox.Show($"Error fetching friends: {ex.Message}")));
                 }
             });
 
@@ -147,7 +137,7 @@ namespace BasicFacebookFeatures
                 {
                     lock (r_FetchLock)
                     {
-                        var posts = r_FacebookLogic.FetchPosts();
+                        FacebookObjectCollection<Post> posts = r_FacebookLogic.FetchPosts();
 
                         i_DataListBox.Invoke(new Action(() =>
                         {
@@ -171,10 +161,7 @@ namespace BasicFacebookFeatures
                 }
                 catch (Exception ex)
                 {
-                    i_DataListBox.Invoke(new Action(() =>
-                    {
-                        MessageBox.Show($"Error fetching posts: {ex.Message}");
-                    }));
+                    i_DataListBox.Invoke(new Action(() => MessageBox.Show($"Error fetching posts: {ex.Message}")));
                 }
             });
 
@@ -188,7 +175,7 @@ namespace BasicFacebookFeatures
                 {
                     lock (r_FetchLock)
                     {
-                        var likedPages = r_FacebookLogic.FetchLikedPages();
+                        FacebookObjectCollection<Page> likedPages = r_FacebookLogic.FetchLikedPages();
 
                         i_DataListBox.Invoke(new Action(() =>
                         {
@@ -209,10 +196,7 @@ namespace BasicFacebookFeatures
                 }
                 catch (Exception ex)
                 {
-                    i_DataListBox.Invoke(new Action(() =>
-                    {
-                        MessageBox.Show($"Error fetching liked pages: {ex.Message}");
-                    }));
+                    i_DataListBox.Invoke(new Action(() => MessageBox.Show($"Error fetching liked pages: {ex.Message}")));
                 }
             });
 
@@ -226,7 +210,7 @@ namespace BasicFacebookFeatures
                 {
                     lock (r_FetchLock)
                     {
-                        var events = r_FacebookLogic.FetchEvents();
+                        FacebookObjectCollection<Event> events = r_FacebookLogic.FetchEvents();
 
                         i_DataListBox.Invoke(new Action(() =>
                         {
@@ -247,10 +231,7 @@ namespace BasicFacebookFeatures
                 }
                 catch (Exception ex)
                 {
-                    i_DataListBox.Invoke(new Action(() =>
-                    {
-                        MessageBox.Show($"Error fetching events: {ex.Message}");
-                    }));
+                    i_DataListBox.Invoke(new Action(() => MessageBox.Show($"Error fetching events: {ex.Message}")));
                 }
             });
 
@@ -266,24 +247,15 @@ namespace BasicFacebookFeatures
                     {
                         Status postedStatus = r_FacebookLogic.PostStatus(i_Message);
 
-                        i_StatusTextBox.Invoke(new Action(() =>
-                        {
-                            MessageBox.Show($"Status posted! ID: {postedStatus.Id}");
-                        }));
+                        i_StatusTextBox.Invoke(new Action(() => MessageBox.Show($"Status posted! ID: {postedStatus.Id}")));
                     }
                     catch (Exception ex)
                     {
-                        i_StatusTextBox.Invoke(new Action(() =>
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }));
+                        i_StatusTextBox.Invoke(new Action(() => MessageBox.Show(ex.ToString())));
                     }
                     finally
                     {
-                        i_StatusTextBox.Invoke(new Action(() =>
-                        {
-                            i_StatusTextBox.Clear();
-                        }));
+                        i_StatusTextBox.Invoke(new Action(() => i_StatusTextBox.Clear()));
                     }
                 }
             });
@@ -315,7 +287,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"Error posting video: {ex.Message}");
             }
         }
-
         public string SelectPhotoFile()
         {
             string selectedFilePath = null;
@@ -377,7 +348,6 @@ namespace BasicFacebookFeatures
                     Font = new Font("Arial", 12, FontStyle.Bold),
                     Padding = new Padding(5)
                 };
-
                 Label birthdayLabel = new Label
                 {
                     Text = $"Birthday: {i_User.Birthday}",
@@ -385,7 +355,6 @@ namespace BasicFacebookFeatures
                     Font = new Font("Arial", 12, FontStyle.Regular),
                     Padding = new Padding(5)
                 };
-
                 PictureBox userPictureBox = new PictureBox
                 {
                     SizeMode = PictureBoxSizeMode.StretchImage,
@@ -425,7 +394,6 @@ namespace BasicFacebookFeatures
                         Font = new Font("Arial", 12, FontStyle.Bold),
                         Padding = new Padding(5)
                     };
-
                     Label membersLabel = new Label
                     {
                         Text = $"Members: {i_Group.Members.Count}",
@@ -433,7 +401,6 @@ namespace BasicFacebookFeatures
                         Font = new Font("Arial", 12, FontStyle.Regular),
                         Padding = new Padding(5)
                     };
-
                     Label privacyLabel = new Label
                     {
                         Text = $"Privacy: {i_Group.Privacy}",
@@ -441,7 +408,6 @@ namespace BasicFacebookFeatures
                         Font = new Font("Arial", 12, FontStyle.Regular),
                         Padding = new Padding(5)
                     };
-
                     PictureBox groupPicture = new PictureBox
                     {
                         SizeMode = PictureBoxSizeMode.StretchImage,
@@ -483,7 +449,6 @@ namespace BasicFacebookFeatures
                         Font = new Font("Arial", 12, FontStyle.Bold),
                         Padding = new Padding(5)
                     };
-
                     Label categoryLabel = new Label
                     {
                         Text = $"Category: {i_Page.Category}",
@@ -491,7 +456,6 @@ namespace BasicFacebookFeatures
                         Font = new Font("Arial", 12, FontStyle.Regular),
                         Padding = new Padding(5)
                     };
-
                     Label likesLabel = new Label
                     {
                         Text = $"Likes: {i_Page.LikesCount}",
@@ -499,7 +463,6 @@ namespace BasicFacebookFeatures
                         Font = new Font("Arial", 12, FontStyle.Regular),
                         Padding = new Padding(5)
                     };
-
                     PictureBox pagePicture = new PictureBox
                     {
                         SizeMode = PictureBoxSizeMode.StretchImage,
@@ -541,7 +504,6 @@ namespace BasicFacebookFeatures
                         Font = new Font("Arial", 12, FontStyle.Bold),
                         Padding = new Padding(5)
                     };
-
                     Label descriptionLabel = new Label
                     {
                         Text = $"Description: {i_FbEvent.Description}",
@@ -549,7 +511,6 @@ namespace BasicFacebookFeatures
                         Font = new Font("Arial", 12, FontStyle.Regular),
                         Padding = new Padding(5)
                     };
-
                     Label startTimeLabel = new Label
                     {
                         Text = $"Start Time: {i_FbEvent.StartTime}",
@@ -557,7 +518,6 @@ namespace BasicFacebookFeatures
                         Font = new Font("Arial", 12, FontStyle.Regular),
                         Padding = new Padding(5)
                     };
-
                     Label endTimeLabel = new Label
                     {
                         Text = $"End Time: {i_FbEvent.EndTime}",
@@ -565,7 +525,6 @@ namespace BasicFacebookFeatures
                         Font = new Font("Arial", 12, FontStyle.Regular),
                         Padding = new Padding(5)
                     };
-
                     Label locationLabel = new Label
                     {
                         Text = $"Location: {i_FbEvent.Location}",
@@ -593,6 +552,7 @@ namespace BasicFacebookFeatures
                 if (i_Post == null)
                 {
                     MessageBox.Show("Post cannot be null.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
                     return;
                 }
 
@@ -631,7 +591,6 @@ namespace BasicFacebookFeatures
                         StartPosition = FormStartPosition.CenterScreen,
                         BackColor = Color.White
                     };
-
                     TextBox messageTextBox = new TextBox
                     {
                         Multiline = true,
@@ -646,7 +605,6 @@ namespace BasicFacebookFeatures
                     {
                         messageLabel.Text = messageTextBox.Text;
                     };
-
                     Button saveButton = new Button
                     {
                         Text = "Save",
@@ -814,17 +772,15 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"Error displaying album details: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void RefreshListBox(ListBox listBox, Album album)
+        private void RefreshListBox(ListBox i_ListBox, Album i_Album)
         {
-            int index = listBox.Items.IndexOf(album);
+            int index = i_ListBox.Items.IndexOf(i_Album);
+
             if (index >= 0)
             {
-                listBox.Items[index] = album;
+                i_ListBox.Items[index] = i_Album;
             }
         }
-
-
         private void OpenAlbumPhotos(Album i_Album, PictureBox i_PictureBoxProfile)
         {
             Form albumForm = new Form

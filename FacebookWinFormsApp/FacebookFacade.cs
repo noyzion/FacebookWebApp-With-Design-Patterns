@@ -77,7 +77,7 @@ namespace BasicFacebookFeatures
         {
             r_FacebookUI.MakeEventPanel(ref io_DataPanel, i_FbEvent);
         }
-        public void MakeAlbumPanel(ref TableLayoutPanel io_DataPanel, ListBox i_DataListBox, 
+        public void MakeAlbumPanel(ref TableLayoutPanel io_DataPanel, ListBox i_DataListBox,
                                     Album i_Album, PictureBox i_PictureBoxProfile, BindingSource i_AlbumBindingSource)
         {
             r_FacebookUI.MakeAlbumPanel(ref io_DataPanel, i_Album,
@@ -91,6 +91,5 @@ namespace BasicFacebookFeatures
         {
             r_FacebookLogic.InviteFriendsForWorkout(i_Friends);
         }
-
     }
 }

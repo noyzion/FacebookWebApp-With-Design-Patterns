@@ -24,6 +24,7 @@ namespace BasicFacebookFeatures
             {
                 workoutTable.Columns.Add(columnName, columnName);
             }
+
             return workoutTable;
         }
         public void FetchWorkoutData(DataGridView i_WorkoutTable)

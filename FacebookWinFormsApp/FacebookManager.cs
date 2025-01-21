@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BasicFacebookFeatures
 {
-    public class FacebookManager 
+    public class FacebookManager
     {
         private readonly FacebookWrapper.LoginResult r_LoginResult;
 
@@ -66,8 +66,6 @@ namespace BasicFacebookFeatures
                     throw new Exception($"Error inviting {friend.Name}: {ex.Message}", ex);
                 }
             }
-            
         }
-
     }
 }

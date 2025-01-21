@@ -20,7 +20,6 @@ namespace BasicFacebookFeatures
                 StartPosition = FormStartPosition.CenterScreen,
                 BackColor = Color.WhiteSmoke
             };
-
             FlowLayoutPanel mainPanel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -29,7 +28,6 @@ namespace BasicFacebookFeatures
                 WrapContents = false,
                 Padding = new Padding(20)
             };
-
             Label headerLabel = new Label
             {
                 Text = "Here's a summary of your workouts:",
@@ -69,7 +67,6 @@ namespace BasicFacebookFeatures
                 Margin = new Padding(10),
                 Padding = new Padding(10)
             };
-
             Label workoutDetailsLabel = createWorkoutDetailsLabel(i_Workout);
             PictureBox workoutIcon = createWorkoutIcon();
 
@@ -126,7 +123,6 @@ namespace BasicFacebookFeatures
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 MaximizeBox = false
             };
-
             FlowLayoutPanel mainPanel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -135,7 +131,6 @@ namespace BasicFacebookFeatures
                 WrapContents = false,
                 Padding = new Padding(20)
             };
-
             Label headerLabel = new Label
             {
                 Text = "Friends you invited:",
@@ -147,7 +142,6 @@ namespace BasicFacebookFeatures
             };
 
             mainPanel.Controls.Add(headerLabel);
-
             if (i_Friends.Count > 0)
             {
                 foreach (User friend in i_Friends)
@@ -175,7 +169,6 @@ namespace BasicFacebookFeatures
             popupForm.Controls.Add(mainPanel);
             popupForm.ShowDialog();
         }
-
         private Panel createFriendPanel(User i_Friend)
         {
             Panel friendPanel = new Panel
@@ -187,7 +180,6 @@ namespace BasicFacebookFeatures
                 BackColor = Color.White,
                 Cursor = Cursors.Hand
             };
-
             PictureBox friendPicture = new PictureBox
             {
                 Image = i_Friend.PictureNormalURL != null ? Image.FromStream(new System.IO.MemoryStream(new System.Net.WebClient().DownloadData(i_Friend.PictureNormalURL))) : null,
@@ -199,7 +191,6 @@ namespace BasicFacebookFeatures
             };
 
             friendPicture.Image = RoundImage(friendPicture.Image);
-
             Label friendName = new Label
             {
                 Text = i_Friend.Name,
@@ -208,7 +199,6 @@ namespace BasicFacebookFeatures
                 Margin = new Padding(10),
                 ForeColor = Color.DarkSlateBlue
             };
-
             FlowLayoutPanel innerPanel = new FlowLayoutPanel
             {
                 FlowDirection = FlowDirection.LeftToRight,
@@ -217,7 +207,6 @@ namespace BasicFacebookFeatures
 
             innerPanel.Controls.Add(friendPicture);
             innerPanel.Controls.Add(friendName);
-
             friendPanel.Controls.Add(innerPanel);
 
             return friendPanel;
