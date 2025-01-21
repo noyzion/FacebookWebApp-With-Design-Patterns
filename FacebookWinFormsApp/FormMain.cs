@@ -194,6 +194,7 @@ namespace BasicFacebookFeatures
         }
         private void photos_Click(object sender, EventArgs e)
         {
+           albumBindingSource.DataSource = m_LoginResult.LoggedInUser.Albums;
             m_FacebookFacade.FetchAlbums(dataListBox);
         }
         private void pages_Click(object sender, EventArgs e)
@@ -253,7 +254,8 @@ namespace BasicFacebookFeatures
                 }
                 else if (dataListBox.SelectedItem is Album selectedAlbum)
                 {
-                    m_FacebookFacade.MakeAlbumPanel(ref dataPanel, dataListBox, selectedAlbum, pictureBoxProfile);
+                    m_FacebookFacade.MakeAlbumPanel(ref dataPanel, dataListBox, selectedAlbum, 
+                                                    pictureBoxProfile, albumBindingSource);
                 }
                 else if (dataListBox.SelectedItem is Group selectedGroup)
                 {

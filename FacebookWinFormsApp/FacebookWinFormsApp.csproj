@@ -103,7 +103,7 @@
     <Compile Include="FacebookManagerUI.cs" />
     <Compile Include="FacebookFacade.cs" />
     <Compile Include="WishlistFeature\IWishlistManager.cs" />
-    <Compile Include="CategoryListWrapper.cs" />
+    <Compile Include="WishlistFeature\CategoryListWrapper.cs" />
     <Compile Include="WorkoutFeature\InviteFriendsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,7 +119,7 @@
     <Compile Include="WorkoutFeature\WorkoutComposer.cs" />
     <Compile Include="WorkoutFeature\WorkoutFacade.cs" />
     <Compile Include="WorkoutFeature\WorkoutManager.cs" />
-    <Compile Include="EWishlistCategories.cs" />
+    <Compile Include="WishlistFeature\EWishlistCategories.cs" />
     <Compile Include="FormAppSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -178,6 +178,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\FacebookWrapper.ObjectModel.Album.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BasicFacebookFeatures
@@ -708,52 +709,53 @@ namespace BasicFacebookFeatures
             }
         }
         public void MakeAlbumPanel(ref TableLayoutPanel io_DataPanel, Album i_Album,
-                                   ListBox i_DataListBox, PictureBox i_PictureBoxProfile)
+                                   ListBox i_DataListBox, PictureBox i_PictureBoxProfile,
+                                   BindingSource i_AlbumBindingSource)
         {
             try
             {
-                BindingSource albumBindingSource = new BindingSource
-                {
-                    DataSource = i_Album
-                };
+                int albumIndex = i_AlbumBindingSource.List.IndexOf(i_Album);
 
+                if (albumIndex != i_AlbumBindingSource.Position)
+                {
+                    i_AlbumBindingSource.Position = albumIndex;
+                }
+
+                io_DataPanel.Controls.Clear();
                 Label albumNameLabel = new Label
                 {
                     AutoSize = true,
                     Font = new Font("Arial", 12, FontStyle.Bold),
-                    Padding = new Padding(5)
+                    Padding = new Padding(5),
+                    Text = i_Album.Name
                 };
-
-                albumNameLabel.DataBindings.Add("Text", albumBindingSource, "Name");
-                Label editLabel = new Label
-                {
-                    Text = "Edit Album Name:",
-                    AutoSize = true,
-                    Font = new Font("Arial", 12, FontStyle.Regular),
-                    Padding = new Padding(5)
-                };
-
                 TextBox albumNameTextBox = new TextBox
                 {
                     AutoSize = true,
                     Font = new Font("Arial", 12, FontStyle.Regular),
-                    Margin = new Padding(5)
+                    Margin = new Padding(5),
+                    Text = i_Album.Name
                 };
 
-                albumNameTextBox.DataBindings.Add("Text", albumBindingSource, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
-                io_DataPanel.Controls.Add(new Label { Text = "Album Name:", AutoSize = true, Font = new Font("Arial", 12, FontStyle.Bold), Padding = new Padding(5) });
-                io_DataPanel.Controls.Add(albumNameLabel);
-                io_DataPanel.Controls.Add(editLabel);
-                io_DataPanel.Controls.Add(albumNameTextBox);
+                albumNameTextBox.TextChanged += (sender, e) =>
+                {
+                    albumNameLabel.Text = albumNameTextBox.Text;
+                };
+                albumNameTextBox.Leave += (sender, e) =>
+                {
+                    if (!string.Equals(i_Album.Name, albumNameTextBox.Text))
+                    {
+                        i_Album.Name = albumNameTextBox.Text;
+                        RefreshListBox(i_DataListBox, i_Album);
+                    }
+                };
                 Label countLabel = new Label
                 {
-                    Text = $"Photos: {i_Album.Count}",
                     AutoSize = true,
                     Font = new Font("Arial", 12, FontStyle.Regular),
-                    Padding = new Padding(5)
+                    Padding = new Padding(5),
+                    Text = $"Photos: {i_Album.Count}"
                 };
-
-                io_DataPanel.Controls.Add(countLabel);
                 PictureBox albumPicture = new PictureBox
                 {
                     SizeMode = PictureBoxSizeMode.StretchImage,
@@ -771,17 +773,15 @@ namespace BasicFacebookFeatures
                     albumPicture.Image = i_PictureBoxProfile.ErrorImage;
                 }
 
-                io_DataPanel.Controls.Add(albumPicture);
                 Button openAlbumButton = new Button
                 {
                     Text = "Open Album",
                     AutoSize = true,
                     Font = new Font("Arial", 12, FontStyle.Bold),
                     BackColor = Color.LightBlue,
-                    Margin = new Padding(5)
+                    Margin = new Padding(5),
                 };
 
-                io_DataPanel.Controls.Add(openAlbumButton);
                 openAlbumButton.Click += (sender, e) =>
                 {
                     Thread openAlbumThread = new Thread(() => OpenAlbumPhotos(i_Album, i_PictureBoxProfile));
@@ -789,22 +789,42 @@ namespace BasicFacebookFeatures
                     openAlbumThread.SetApartmentState(ApartmentState.STA);
                     openAlbumThread.Start();
                 };
-
-                albumBindingSource.CurrentItemChanged += (sender, e) =>
+                io_DataPanel.Controls.Add(new Label
                 {
-                    int index = i_DataListBox.Items.IndexOf(i_Album);
-
-                    if (index >= 0)
-                    {
-                        i_DataListBox.Items[index] = i_Album;
-                    }
-                };
+                    Text = "Album Name:",
+                    AutoSize = true,
+                    Font = new Font("Arial", 12, FontStyle.Bold),
+                    Padding = new Padding(5),
+                });
+                io_DataPanel.Controls.Add(albumNameLabel);
+                io_DataPanel.Controls.Add(new Label
+                {
+                    Text = "Edit Album Name:",
+                    AutoSize = true,
+                    Font = new Font("Arial", 12, FontStyle.Regular),
+                    Padding = new Padding(5),
+                });
+                io_DataPanel.Controls.Add(albumNameTextBox);
+                io_DataPanel.Controls.Add(countLabel);
+                io_DataPanel.Controls.Add(albumPicture);
+                io_DataPanel.Controls.Add(openAlbumButton);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error displaying album details: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void RefreshListBox(ListBox listBox, Album album)
+        {
+            int index = listBox.Items.IndexOf(album);
+            if (index >= 0)
+            {
+                listBox.Items[index] = album;
+            }
+        }
+
+
         private void OpenAlbumPhotos(Album i_Album, PictureBox i_PictureBoxProfile)
         {
             Form albumForm = new Form
