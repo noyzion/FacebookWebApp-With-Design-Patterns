@@ -6,7 +6,7 @@ using System.IO;
 
 namespace BasicFacebookFeatures
 {
-    public class WishlistUIManager
+    public class WishlistManagerUI
     {
         private const int k_PopUpWidthSize = 870;
         private const int k_PopUpHeightSize = 580;
@@ -18,6 +18,7 @@ namespace BasicFacebookFeatures
         private const int k_PictureBoxItemSize = 60;
         private const int k_PictureBoxLocationX = 5;
         private const int k_PictureBoxLocationY = 30;
+
         public void UpdateCheckedListBox(CheckedListBox i_FoodListBox, CheckedListBox i_PetsListBox,
                                          CheckedListBox i_ActivitiesListBox, CheckedListBox i_ShoppingListBox,
                                          string i_Category, WishListItem i_WishlistItem)

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BasicFacebookFeatures
 {
-    public class FacebookManager
+    public class FacebookManager 
     {
         private readonly FacebookWrapper.LoginResult r_LoginResult;
 
@@ -36,17 +36,17 @@ namespace BasicFacebookFeatures
         {
             return r_LoginResult.LoggedInUser.Events;
         }
-        public Status PostStatus(string message)
+        public Status PostStatus(string i_Message)
         {
-            return r_LoginResult.LoggedInUser.PostStatus(message);
+            return r_LoginResult.LoggedInUser.PostStatus(i_Message);
         }
-        public Post PostPhoto(string filePath)
+        public Post PostPhoto(string i_FilePath)
         {
-            return r_LoginResult.LoggedInUser.PostPhoto(filePath);
+            return r_LoginResult.LoggedInUser.PostPhoto(i_FilePath);
         }
-        public void PostVideo(string filePath)
+        public void PostVideo(string i_FilePath)
         {
-            r_LoginResult.LoggedInUser.PostPhoto(filePath);
+            r_LoginResult.LoggedInUser.PostPhoto(i_FilePath);
         }
         public void InviteFriendsForWorkout(FacebookObjectCollection<User> i_Friends)
         {

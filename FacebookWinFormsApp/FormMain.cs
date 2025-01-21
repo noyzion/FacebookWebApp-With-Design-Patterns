@@ -107,9 +107,7 @@ namespace BasicFacebookFeatures
             if (m_LoginResult == null || string.IsNullOrEmpty(m_LoginResult.AccessToken))
             {
                 buttonLogin.Enabled = false;
-                Thread loginThread = new Thread(Login);
-
-                loginThread.Start();
+                Login();
             }
         }
         private void buttonsAfterLogin()
@@ -125,8 +123,8 @@ namespace BasicFacebookFeatures
             photosPicture.Enabled = true;
             friendsPicture.Enabled = true;
             groupsPicture.Enabled = true;
-            pictureBoxEventes.Enabled = true;
-            eventsButton.Enabled = true;
+            eventesPicture.Enabled = true;
+            buttonEvents.Enabled = true;
             buttonAddPicture.Enabled = true;
             textBoxStatus.Enabled = true;
             buttonAddVideo.Enabled = true;
@@ -135,17 +133,23 @@ namespace BasicFacebookFeatures
             buttonShareWorkout.Enabled = true;
             buttonStatistics.Enabled = true;
             buttonInviteFriends.Enabled = true;
+            buttonShareWishlist.Enabled = true;
+            textBoxName.Enabled = true;
+            comboBoxCategory.Enabled = true;
         }
         private void buttonLogout_Click(object sender, EventArgs e)
         {
             FacebookService.LogoutWithUI();
+            r_AppSettings.LastAccessToken = null;
             m_LoginResult = null;
             r_AppSettings.WishlistFacade = null;
             r_AppSettings.WorkoutFacade = null;
+
             logoutUIChanges();
         }
         private void logoutUIChanges()
         {
+            rememberMeCheckBox.Checked = false;
             buttonLogin.Text = "Login";
             buttonLogin.BackColor = buttonLogout.BackColor;
             buttonLogin.ForeColor = buttonLogout.ForeColor;
@@ -155,8 +159,23 @@ namespace BasicFacebookFeatures
             buttonShareWorkout.Enabled = false;
             buttonStatistics.Enabled = false;
             buttonInviteFriends.Enabled = false;
+            buttonAddWorkout.Enabled = false;
+            buttonAlbums.Enabled = false;
+            buttonGroups.Enabled = false;
+            buttonPosts.Enabled = false;
+            buttonFriends.Enabled = false;
+            buttonEvents.Enabled = false;
+            eventesPicture.Enabled = false;
+            groupsPicture.Enabled = false;
+            friendsPicture.Enabled = false;
+            likedPagesPicture.Enabled = false;
+            postsPicture.Enabled = false;
+            photosPicture.Enabled = false;
             labelBirthday.Text = "Birthday: ";
             labelEmail.Text = "Email: ";
+            buttonShareWishlist.Enabled = false;
+            textBoxName.Enabled = false;
+            comboBoxCategory.Enabled = false;
             m_WorkoutFacade.ResetWorkoutTable();
             m_WishlistFacade.ResetUI(checkedListBoxFood, checkedListBoxPets,
                                               checkedListBoxActivities, checkedListBoxShopping);
@@ -189,50 +208,38 @@ namespace BasicFacebookFeatures
         {
             try
             {
-                lock (r_LoginLock)
+                m_LoginResult = FacebookService.Login(
+                    "914564353962957",
+                    "email",
+                    "public_profile",
+                    "user_posts",
+                    "user_photos",
+                    "user_events",
+                    "user_friends",
+                    "user_likes"
+                );
+                if (!string.IsNullOrEmpty(m_LoginResult.AccessToken))
                 {
-                    m_LoginResult = FacebookService.Login(
-                        "914564353962957",
-                        "email",
-                        "public_profile",
-                        "user_posts",
-                        "user_photos",
-                        "user_events",
-                        "user_friends",
-                        "user_likes"
-                    );
-                    if (!string.IsNullOrEmpty(m_LoginResult.AccessToken))
-                    {
-                        m_FacebookFacade = new FacebookFacade(m_LoginResult);
-                        m_WorkoutFacade = new WorkoutFacade();
-                        m_WishlistFacade = new WishlistFacade();
-                    }
+                    m_FacebookFacade = new FacebookFacade(m_LoginResult);
+                    m_WorkoutFacade = new WorkoutFacade();
+                    m_WishlistFacade = new WishlistFacade();
                 }
 
                 if (!string.IsNullOrEmpty(m_LoginResult.AccessToken))
                 {
-                    this.Invoke((Action)(() =>
-                    {
-                        PopulateUIFromFacebookData();
-                        buttonsAfterLogin();
-                    }));
+                    PopulateUIFromFacebookData();
+                    buttonsAfterLogin();
                 }
                 else
                 {
-                    this.Invoke((Action)(() =>
-                    {
-                        MessageBox.Show("Login failed. Please try again.", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        buttonLogin.Enabled = true;
-                    }));
+                    MessageBox.Show("Login failed. Please try again.", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    buttonLogin.Enabled = true;
                 }
             }
             catch (Exception ex)
             {
-                this.Invoke((Action)(() =>
-                {
-                    MessageBox.Show($"Login failed: {ex.Message}", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    buttonLogin.Enabled = true;
-                }));
+                MessageBox.Show($"Login failed: {ex.Message}", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                buttonLogin.Enabled = true;
             }
         }
         private void dataListBox_SelectedIndexChanged(object sender, EventArgs e)

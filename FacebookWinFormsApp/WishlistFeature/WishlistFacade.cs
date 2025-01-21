@@ -10,12 +10,12 @@ namespace BasicFacebookFeatures
     public class WishlistFacade
     {
         public WishlistManager WishlistManager { get; set; }
-        private readonly WishlistUIManager r_WishlistUIManager;
+        private readonly WishlistManagerUI r_WishlistUIManager;
 
         public WishlistFacade()
         {
             WishlistManager = new WishlistManager();
-            r_WishlistUIManager = new WishlistUIManager();
+            r_WishlistUIManager = new WishlistManagerUI();
         }
         public void AddWish(string i_Category, string i_ItemName, string i_PhotoUrl)
         {

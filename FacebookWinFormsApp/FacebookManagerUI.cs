@@ -302,6 +302,19 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"Error posting photo: {ex.Message}");
             }
         }
+        public void PostVideo(string i_FilePath)
+        {
+            try
+            {
+                r_FacebookLogic.PostVideo(i_FilePath);
+                MessageBox.Show("Video posted successfully!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error posting video: {ex.Message}");
+            }
+        }
+
         public string SelectPhotoFile()
         {
             string selectedFilePath = null;
@@ -350,18 +363,6 @@ namespace BasicFacebookFeatures
                 MessageBox.Show(ex.Message);
 
                 return null;
-            }
-        }
-        public void PostVideo(string i_FilePath)
-        {
-            try
-            {
-                r_FacebookLogic.PostVideo(i_FilePath);
-                MessageBox.Show("Video posted successfully!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error posting video: {ex.Message}");
             }
         }
         public void MakeFriendsPanel(ref TableLayoutPanel io_DataPanel, User i_User, PictureBox i_PictureBoxProfile)
