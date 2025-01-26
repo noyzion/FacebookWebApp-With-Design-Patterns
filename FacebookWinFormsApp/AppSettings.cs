@@ -11,7 +11,6 @@ namespace BasicFacebookFeatures
         public string LastAccessToken { get; set; }
         public WishlistManager WishlistManager { get; set; }
         public WishlistFacade WishlistFacade { get; set; }
-
         public WorkoutManager WorkoutManager { get; set; }
         public WorkoutFacade WorkoutFacade { get; set; }
         public AppSettings()
@@ -51,6 +50,7 @@ namespace BasicFacebookFeatures
                     settings = deserilaizer.Deserialize(stream) as AppSettings;
                 }
             }
+
             return settings;
         }
     }

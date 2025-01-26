@@ -10,7 +10,7 @@ namespace BasicFacebookFeatures
     {
         public string Text { get; set; }
         public string PhotoUrl { get; set; }
-        public bool Checked {  get; set; }
+        public bool Checked { get; set; }
         public WishListItem() { }
         public WishListItem(string i_Text, string i_PhotoUrl)
         {

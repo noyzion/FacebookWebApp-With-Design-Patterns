@@ -6,7 +6,7 @@ namespace BasicFacebookFeatures
 {
     public interface IWishlistManager
     {
-        void AddWishToWishlistValues(string i_Category, string i_ItemName, string i_PhotoUrl);
+        WishListItem AddWishToWishlistValues(string i_Category, string i_ItemName, string i_PhotoUrl);
         void RemoveWishFromWishlistValues(string i_Category, WishListItem i_ItemToRemove);
         List<WishListItem> GetItemsByCategory(string i_Category);
         WishListItem FindWishListItemByName(string i_Category, string i_ItemName);

@@ -17,9 +17,9 @@ namespace BasicFacebookFeatures
             WishlistManager = new WishlistManager();
             r_WishlistUIManager = new WishlistManagerUI();
         }
-        public void AddWish(string i_Category, string i_ItemName, string i_PhotoUrl)
+        public WishListItem AddWish(string i_Category, string i_ItemName, string i_PhotoUrl)
         {
-            WishlistManager.AddWishToWishlistValues(i_Category, i_ItemName, i_PhotoUrl);
+            return WishlistManager.AddWishToWishlistValues(i_Category, i_ItemName, i_PhotoUrl);
         }
         public void RemoveWish(string i_Category, WishListItem i_ItemToRemove)
         {
@@ -63,15 +63,15 @@ namespace BasicFacebookFeatures
                                     CheckedListBox i_PetsListBox, CheckedListBox i_ShoppingListBox)
         {
             var wishlistSummary = new StringBuilder("My Wishlist:\n");
+
             wishlistSummary.AppendLine($"Food: {getCheckedItems(i_FoodListBox)}");
             wishlistSummary.AppendLine($"Activities: {getCheckedItems(i_ActivitiesListBox)}");
             wishlistSummary.AppendLine($"Pets: {getCheckedItems(i_PetsListBox)}");
             wishlistSummary.AppendLine($"Shopping: {getCheckedItems(i_ShoppingListBox)}");
             r_WishlistUIManager.DisplayCombinedWishlistPopup(i_FoodListBox, i_ActivitiesListBox, i_PetsListBox, i_ShoppingListBox);
-            
+
             return wishlistSummary.ToString();
         }
-
         private string getCheckedItems(CheckedListBox i_ListBox)
         {
             return string.Join(", ", i_ListBox.Items.Cast<WishListItem>().Where(item => item.Checked).Select(item => item.Text));
@@ -81,13 +81,12 @@ namespace BasicFacebookFeatures
             WishListItem item = WishlistManager.FindWishListItemByName(i_Category, i_ItemName);
 
             r_WishlistUIManager.HighlightItemInList(item, i_PictureBox, i_DeleteButton);
-            
+
             return item;
         }
         public List<WishListItem> GetItemsByCategory(string i_Category)
         {
             return WishlistManager.GetItemsByCategory(i_Category);
         }
-
     }
 }

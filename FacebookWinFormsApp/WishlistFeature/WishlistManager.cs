@@ -13,7 +13,7 @@ namespace BasicFacebookFeatures
         {
             WishlistValues = new List<CategoryListWrapper>();
         }
-        public void AddWishToWishlistValues(string i_Category, string i_ItemName, string i_PhotoUrl)
+        public WishListItem AddWishToWishlistValues(string i_Category, string i_ItemName, string i_PhotoUrl)
         {
             WishListItem newItem = i_PhotoUrl != null
                 ? WishListItemFactory.CreateWithPhoto(i_ItemName, i_PhotoUrl)
@@ -35,6 +35,8 @@ namespace BasicFacebookFeatures
                     throw new Exception("You can't add two items with the same name to the same list!");
                 }
             }
+
+            return newItem;
         }
         public void RemoveWishFromWishlistValues(string i_Category, WishListItem i_ItemToRemove)
         {
@@ -71,4 +73,3 @@ namespace BasicFacebookFeatures
         }
     }
 }
-

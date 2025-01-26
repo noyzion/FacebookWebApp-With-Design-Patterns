@@ -13,14 +13,14 @@ namespace BasicFacebookFeatures.WorkoutFeature
 {
     public partial class InviteFriendsForm : Form
     {
-        private readonly FacebookFacade m_FacebookFacade;
-        private readonly WorkoutFacade m_WorkoutFacade;
+        private readonly FacebookFacade r_FacebookFacade;
+        private readonly WorkoutFacade r_WorkoutFacade;
 
         public InviteFriendsForm(FacebookFacade i_FacebookFacade, WorkoutFacade i_WorkoutFacade)
         {
             InitializeComponent();
-            m_FacebookFacade = i_FacebookFacade;
-            m_WorkoutFacade = i_WorkoutFacade;
+            r_FacebookFacade = i_FacebookFacade;
+            r_WorkoutFacade = i_WorkoutFacade;
         }
         private void listBoxFriends_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -30,7 +30,7 @@ namespace BasicFacebookFeatures.WorkoutFeature
         {
             try
             {
-                m_FacebookFacade.FetchFriends(listBoxFriends);
+                r_FacebookFacade.FetchFriends(listBoxFriends);
             }
             catch (Exception ex)
             {
@@ -42,7 +42,7 @@ namespace BasicFacebookFeatures.WorkoutFeature
             if (listBoxFriends.CheckedItems.Count == 0)
             {
                 MessageBox.Show("Please select at least one friend to invite.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                
+
                 return;
             }
 
@@ -52,12 +52,12 @@ namespace BasicFacebookFeatures.WorkoutFeature
             {
                 FacebookObjectCollection<User> facebookCollection = new FacebookObjectCollection<User>();
 
-                foreach (var friend in selectedFriends)
+                foreach (User friend in selectedFriends)
                 {
                     facebookCollection.Add(friend);
                 }
 
-                m_FacebookFacade.InviteFriends(facebookCollection);
+                r_FacebookFacade.InviteFriends(facebookCollection);
                 MessageBox.Show("Invitations sent successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -65,7 +65,7 @@ namespace BasicFacebookFeatures.WorkoutFeature
                 MessageBox.Show($"An error occurred while sending invites: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            m_WorkoutFacade.DisplayInviteFriendsPost(selectedFriends);
+            r_WorkoutFacade.DisplayInviteFriendsPost(selectedFriends);
             this.Close();
         }
     }

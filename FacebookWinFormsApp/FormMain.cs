@@ -16,7 +16,7 @@ namespace BasicFacebookFeatures
         private const string k_User = "UserData.xml";
         private const int k_CollectionLimit = 70;  // If the limit is bigger, it works but very slow
         private readonly AppSettings r_AppSettings;
-        private FacebookWrapper.LoginResult m_LoginResult;
+        private LoginResult m_LoginResult;
         private FormAppSettings m_FormAppSettings = null;
         private bool m_IsTextBoxChanged = false;
         private bool m_IsComboBoxChanged = false;
@@ -459,11 +459,10 @@ namespace BasicFacebookFeatures
                 }
             }
         }
-        private void buttonAddWithPhoto_Click(object sender, EventArgs e)
+        private void addWishlistItem(string i_PhotoURL)
         {
             try
             {
-                string photoURL = m_FacebookFacade.SelectPhotoFile();
                 string itemName = textBoxName.Text.Trim();
                 string category = comboBoxCategory.Text;
 
@@ -471,12 +470,11 @@ namespace BasicFacebookFeatures
                 {
                     MessageBox.Show("Please provide both a category and item name.", "Input Error",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                    
                     return;
                 }
 
-                r_WishlistFacade.AddWish(category, itemName, photoURL);
-                WishListItem newItem = new WishListItem { Text = itemName, PhotoUrl = photoURL };
+                WishListItem newItem = r_WishlistFacade.AddWish(category, itemName, i_PhotoURL);
 
                 r_WishlistFacade.UpdateUI(checkedListBoxFood, checkedListBoxPets,
                                         checkedListBoxActivities, checkedListBoxShopping, category, newItem);
@@ -487,30 +485,15 @@ namespace BasicFacebookFeatures
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void buttonAddWithPhoto_Click(object sender, EventArgs e)
+        {
+            string photoURL = m_FacebookFacade.SelectPhotoFile();
+
+            addWishlistItem(photoURL);
+        }
         private void buttonAddWithoutPhoto_Click(object sender, EventArgs e)
         {
-            try
-            {
-                string itemName = textBoxName.Text.Trim();
-                string category = comboBoxCategory.Text;
-
-                if (string.IsNullOrEmpty(category) || string.IsNullOrEmpty(itemName))
-                {
-                    MessageBox.Show("Please provide both a category and item name.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    return;
-                }
-
-                r_WishlistFacade.AddWish(category, itemName, null);
-                WishListItem newItem = new WishListItem { Text = itemName, PhotoUrl = null };
-
-                r_WishlistFacade.UpdateUI(checkedListBoxFood, checkedListBoxPets, checkedListBoxActivities, checkedListBoxShopping, category, newItem);
-                textBoxName.Clear();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            addWishlistItem(null);
         }
         private void checkedListBoxFood_ItemCheck(object sender, ItemCheckEventArgs e)
         {

@@ -15,7 +15,6 @@ namespace BasicFacebookFeatures
         {
             WorkoutManager = new WorkoutManager();
             r_WorkoutManagerUI = new WorkoutManagerUI();
-
             r_WorkoutTable = WorkoutManager.InitializeWorkoutTable();
         }
         public DataGridView GetWorkoutTable()
